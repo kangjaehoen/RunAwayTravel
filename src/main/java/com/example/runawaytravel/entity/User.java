@@ -19,4 +19,5 @@ public class User {
     private String gender;
     private String birth;
     private String accountNum;
+    private String role;
 }
