@@ -17,7 +17,7 @@ public class Accom {
     private int accomNum;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="username")
-    private User username;
+    private User user;
     private String postcode;
     private String address;
     @Column(name = "detailaddress")
@@ -52,9 +52,9 @@ public class Accom {
     private LocalDate regDate;
 
     public void setUserUsername(String username){
-        if (this.username == null) {
-            this.username = new User(); // User 객체 초기화
+        if (this.user == null) {
+            this.user = new User(); // User 객체 초기화
         }
-        this.username.setUsername(username);
+        this.user.setUsername(username);
     }
 }
