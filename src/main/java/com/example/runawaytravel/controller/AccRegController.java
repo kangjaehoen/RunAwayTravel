@@ -10,10 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -23,6 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin("*")
 public class AccRegController {
     @Autowired
     AccomRepository acr;
@@ -34,7 +32,12 @@ public class AccRegController {
     @PostMapping("/accUpload")
     public ResponseEntity<String> accreg(HttpSession session, @ModelAttribute Accom accom, @RequestParam(required = false) List<MultipartFile> imageUpload, @ModelAttribute AccomImage ai, @RequestParam(value = "day", required = false) LinkedList<Integer> days){
         //session에서 username가지고 오기
-        accom.setUserUsername((String)session.getAttribute("username"));
+        String username = (String)session.getAttribute("username");
+        if (username==null){
+            username = "testID";
+        }
+        accom.setUserUsername(username);
+
         //accom 테이블에 휴일날짜 넣기
         if (days != null && !days.isEmpty()) {
             String dayoff ="";
@@ -47,29 +50,30 @@ public class AccRegController {
         Accom savedaccom = acr.save(accom);
 
         //closed 테이블
-        List<LocalDate> oneweekdayoff = new ArrayList<>() ;
-        LocalDate start = accom.getRegDate();
-        int startdayofweek = start.getDayOfWeek().getValue();
-        for(int elem : days){
-            if(elem<startdayofweek){
-                oneweekdayoff.add(start.plusDays(elem+7));
-            } else{
-                oneweekdayoff.add(start.plusDays(elem));
+        if (days != null && !days.isEmpty()) {
+            List<LocalDate> oneweekdayoff = new ArrayList<>() ;
+            LocalDate start = accom.getRegDate();
+            int startdayofweek = start.getDayOfWeek().getValue();
+            for(int elem : days){
+                if(elem<startdayofweek){
+                    oneweekdayoff.add(start.plusDays(elem+7));
+                } else{
+                    oneweekdayoff.add(start.plusDays(elem));
+                }
             }
-        }
 
-        List<Dayoff>dayoffs=new ArrayList<>();
-        for(int i = 0 ; i<52 ; i++){
-            for(LocalDate elem : oneweekdayoff){
-                Dayoff day = new Dayoff();
-                day.setAccomNum(savedaccom.getAccomNum());
-                day.setDate(elem);
-                dayoffs.add(day);
+            List<Dayoff>dayoffs=new ArrayList<>();
+            for(int i = 0 ; i<52 ; i++){
+                for(LocalDate elem : oneweekdayoff){
+                    Dayoff day = new Dayoff();
+                    day.setAccomNum(savedaccom.getAccomNum());
+                    day.setDate(elem);
+                    dayoffs.add(day);
+                }
+                oneweekdayoff = oneweekdayoff.stream().map(e->e.plusDays(7)).collect(Collectors.toList());
             }
-            oneweekdayoff = oneweekdayoff.stream().map(e->e.plusDays(7)).collect(Collectors.toList());
+            dor.saveAll(dayoffs);
         }
-        dor.saveAll(dayoffs);
-
 
         //이미지 넣기
         ai.setAccomNum(savedaccom);
@@ -101,5 +105,27 @@ public class AccRegController {
         return entity;
     }
 
+    @PostMapping(value = "/accload")
+    public ResponseEntity<Map<String, Object>> loadaccdata(@RequestParam int accomNum){
+        Map response = new HashMap<String,Object>();
+        Optional<Accom> oneAcc = acr.findById(accomNum);
+        if(oneAcc.isPresent()){
+            response.put("oneAcc",acr.findById(accomNum).get());
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        } else {
+            System.out.println("해당 숙소번호는 없음");
+            response.put("oneAcc","해당 숙소번호 없음");
+            return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+        }
+    }
+    @DeleteMapping(value = "/accDel")
+    public ResponseEntity<String>deleteAcc(){
+        return new ResponseEntity<>("삭제성공",HttpStatus.OK);
+    }
 
+    //test1
+    @PostMapping("/uploadtest1")
+    public ResponseEntity<String> accregtest1(){
+        return new ResponseEntity<>("삽입성공",HttpStatus.CREATED);
+    }
 }
