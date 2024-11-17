@@ -1,5 +1,6 @@
 package com.example.runawaytravel.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
@@ -18,5 +19,7 @@ public class User {
     private String pw;
     private String gender;
     private String birth;
+    @Column(name = "accountnum")
     private String accountNum;
+    private String role="USER";
 }
