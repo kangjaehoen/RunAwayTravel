@@ -50,7 +50,7 @@ public class SecurityConfig {
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest req) {
                                 CorsConfiguration config = new CorsConfiguration();
 
-                                config.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+                                config.setAllowedOrigins(Collections.singletonList("http://localhost:5175"));
                                 config.setAllowedMethods(Collections.singletonList("*"));
                                 config.setAllowCredentials(true);
                                 config.setAllowedHeaders(Collections.singletonList("*"));
@@ -67,7 +67,7 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable()); //stateless 상태일때 필요없기에 disable 시키기
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login/**", "/", "/join/**").permitAll()
+                        .requestMatchers("/api/login/**", "/", "/api/join/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
         http

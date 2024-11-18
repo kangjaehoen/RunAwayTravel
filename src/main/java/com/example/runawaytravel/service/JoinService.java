@@ -24,6 +24,7 @@ public class JoinService {
         String name = joinDTO.getName();
         String email = joinDTO.getEmail();
         String gender = joinDTO.getGender();
+        String birth = joinDTO.getBirth();
 
         Boolean isExist = userRepository.existsByUsername(username);
 
@@ -39,7 +40,8 @@ public class JoinService {
         data.setName(name);
         data.setEmail(email);
         data.setGender(gender);
-        data.setRole("ROLE_ADMIN");
+        data.setBirth(birth);
+        data.setRole("ROLE_USER");
 
         userRepository.save(data);
     }

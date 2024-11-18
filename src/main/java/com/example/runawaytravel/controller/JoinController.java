@@ -3,13 +3,11 @@ package com.example.runawaytravel.controller;
 import com.example.runawaytravel.dto.JoinDTO;
 import com.example.runawaytravel.service.JoinService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@ResponseBody
+@RestController
 @RequestMapping("/api")
-@CrossOrigin(origins="http://localhost:5173", allowedHeaders = "*", exposedHeaders="Authorization", allowCredentials = "true")
+@CrossOrigin(origins="http://localhost:5175", allowedHeaders = "*", exposedHeaders="Authorization", allowCredentials = "true")
 public class JoinController {
 
     private final JoinService joinService;
