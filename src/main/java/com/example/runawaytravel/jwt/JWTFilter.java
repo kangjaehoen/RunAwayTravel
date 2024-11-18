@@ -33,7 +33,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 //토큰 분리후 토큰의 소멸시간을 검증한다
         String token = authorization.split(" ")[1]; //토큰의 앞부분 bearer를 삭제 (List 두개 중 첫번째를 토큰으로 받는다)
-
+        System.out.println(token+"JWTFilter토큰");
         if (jwtUtil.isExpired(token)) { //토큰이 존재하는데 소멸시간이 지났는지 보기 위해 if true 토큰이 만료되어 종료 하고 필터체인으로 다음 필터한테 받은 response, request를 넘겨준다
             System.out.println("token expired");
             filterChain.doFilter(req, res);

@@ -18,7 +18,7 @@ public class JoinService {
 
     }
     public void joinProcess(JoinDTO joinDTO) {
-
+        System.out.println(joinDTO);
         String username = joinDTO.getUsername();
         String password = joinDTO.getPw();
         String name = joinDTO.getName();
@@ -41,7 +41,7 @@ public class JoinService {
         data.setEmail(email);
         data.setGender(gender);
         data.setBirth(birth);
-        data.setRole("ROLE_USER");
+        data.setRole("ROLE_ADMIN");
 
         userRepository.save(data);
     }

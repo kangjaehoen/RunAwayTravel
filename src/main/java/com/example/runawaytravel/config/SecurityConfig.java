@@ -55,7 +55,6 @@ public class SecurityConfig {
                                 config.setAllowCredentials(true);
                                 config.setAllowedHeaders(Collections.singletonList("*"));
                                 config.setMaxAge(3600L);
-
                             return config;
                             }
                         })));
@@ -67,11 +66,11 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable()); //stateless 상태일때 필요없기에 disable 시키기
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/login/**", "/", "/api/join/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/login/**", "/", "/api/join/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class); //로그인 필터 앞에 넣어준다 -> jwt 필터는 생성자에서 확인해보면 jwtutil 클래스 객체를 주입받았기 때문에 넣어준다.
+                .addFilterAfter(new JWTFilter(jwtUtil), LoginFilter.class); //로그인 필터 앞에 넣어준다 -> jwt 필터는 생성자에서 확인해보면 jwtutil 클래스 객체를 주입받았기 때문에 넣어준다.
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class); //filter생성해주기, 위치 어디로? authentication manager 메서드 갖고 와서 사용
         http

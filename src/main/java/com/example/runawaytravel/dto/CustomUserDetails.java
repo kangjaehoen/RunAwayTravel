@@ -14,7 +14,8 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() { //role값
+    public Collection<? extends GrantedAuthority> getAuthorities() {//role값
+        System.out.println("CustomUserDetails.getAuthorities() 진입");
         Collection<GrantedAuthority> collection = new ArrayList<>();
         collection.add(new GrantedAuthority() {
             @Override
@@ -32,7 +33,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() { //유저이름
-        return user.getEmail();
+        return user.getUsername();
     }
 
     @Override
