@@ -1,0 +1,35 @@
+    .selnav{
+        min-width : 200px;
+    }
+    .selmenu{
+    position: fixed;
+    top: 25%;
+    width: 180px;
+    height: 200px;
+    padding : 10px;
+    background-color : #B2D055;
+    font-size : 14px;
+    line-height : 30px;
+    border-radius : 10px;
+    list-style : none;
+    }
+@media ( max-width : 1150px) {
+	.selnav {
+		display: none;
+	}
+}
+.selmenu li{
+    list-style-type : none;
+}
+
+.selmenu li a{
+    display : block;
+    width : 100%;
+    height : 100%;
+    padding-left : 30px;
+    text-decoration-line : none;
+}
+
+.selmenu li:hover {
+	background-color: #8dbf3d;
+}

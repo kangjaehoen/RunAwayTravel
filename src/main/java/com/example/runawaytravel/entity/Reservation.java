@@ -1,6 +1,5 @@
 package com.example.runawaytravel.entity;
 
-import groovyjarjarpicocli.CommandLine;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,11 +32,9 @@ public class Reservation {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="username")
-    private User userName;
+    private User user;
 
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="accomnum")
-    private Accom accomNum;
-
-
+    private Accom accom;
 }

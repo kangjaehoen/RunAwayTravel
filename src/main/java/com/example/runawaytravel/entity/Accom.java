@@ -53,10 +53,6 @@ public class Accom {
     @Column(name="regdate")
     private LocalDate regDate;
 
-    public Accom(int accomNum){
-        this.accomNum = accomNum;
-    }
-
     public void setUserUsername(String username){
         if (this.user == null) {
             this.user = new User(); // User 객체 초기화
