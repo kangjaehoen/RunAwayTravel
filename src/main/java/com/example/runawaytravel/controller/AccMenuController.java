@@ -1,80 +1,75 @@
 package com.example.runawaytravel.controller;
 
+import com.example.runawaytravel.DTO.PageDTO;
 import com.example.runawaytravel.entity.Accom;
+import com.example.runawaytravel.entity.Dayoff;
+import com.example.runawaytravel.repository.AccomImageRepository;
 import com.example.runawaytravel.repository.AccomRepository;
+import com.example.runawaytravel.repository.DayoffRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedList;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Controller
-@CrossOrigin(origins = "http://localhost:5173")
+@RestController
+@CrossOrigin(origins = "*")
 public class AccMenuController {
     @Autowired
     AccomRepository acr;
-    @RequestMapping("/accregist")
-    public String accRegist(){
-        return "accRegister";
-    }
-    @RequestMapping("/myacclist")
-    public ModelAndView searchmine(HttpSession session, @RequestParam(defaultValue = "") String key, @RequestParam(defaultValue = "0")int page) {
-        ModelAndView mav = new ModelAndView();
-        String username = (String) session.getAttribute("username");
-        PageRequest pr = PageRequest.of(page,10);
-        Page<Accom> mylist =acr.searchmine(username,key,pr);
-        mav.addObject("mylist", mylist);
+    @Autowired
+    AccomImageRepository air;
+    @Autowired
+    DayoffRepository dor;
 
-        long maxpage = ( acr.countmylist(username,key) - 1L) / 10L +1L;
-        long maxmove = Math.min(maxpage,(long)page + 6L);
-        long minmove = Math.max(1L,(long)page-4L);
-        List<Long>pageNav = new LinkedList<>();
-        for(long i =minmove ; i <= maxmove ; i++){
-            pageNav.add(i);
+    @PostMapping("/myaccomtable")
+    public ResponseEntity<Map<String, Object>> myaccomtable(@RequestBody PageDTO page, HttpSession session) {
+        String username= (String) session.getAttribute("username");
+        if(username == null){username = "testID";}//로그인 실패시
+
+        System.out.println("현재 아이디 : "+username);
+
+        PageRequest pr = PageRequest.of(page.getPage(),10);
+        Page<Accom> mylist =acr.searchmine(username, page.getKey(),pr);
+
+        // 필요한 데이터를 Map 형태로 변환
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", mylist.getContent()); // Accom 리스트
+        response.put("currentPage", mylist.getNumber());
+        response.put("totalPages", mylist.getTotalPages());
+        response.put("totalElements", mylist.getTotalElements());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @PostMapping(value = "/changeonsale")
+    public ResponseEntity<String>changeonsale(@RequestBody List<Integer>accomNumList){
+        List<Accom>list= acr.manyacc(accomNumList);
+        for(Accom accom : list){
+            if(accom.getOnSale()==1){
+                accom.setOnSale(0);
+            } else if (accom.getOnSale()==0) {
+                accom.setOnSale((1));
+            }
         }
-        mav.addObject("page",page);
-        mav.addObject("pNav",pageNav);
-        mav.setViewName("myAcc");
-        return mav;
+        acr.saveAll(list);
+        return new ResponseEntity<String>("성공",HttpStatus.OK);
     }
-    @RequestMapping("/myaccomtable")
-    @ResponseBody
-    public ResponseEntity<Page<Accom>>  myaccomtable(HttpSession session, @RequestParam(defaultValue = "") String key, @RequestParam(defaultValue = "0") int page){
-        String username = (String) session.getAttribute("username");
-        PageRequest pr = PageRequest.of(page,10);
-        Page<Accom> mylist =acr.searchmine(username,key,pr);
-        ResponseEntity<Page<Accom>> entity = new ResponseEntity<>(mylist, HttpStatus.OK);
-        return entity;
-    }
-
-    @RequestMapping("/myacclistonsale")
-    public ModelAndView searchmineonsale(HttpSession session, @RequestParam(defaultValue = "0")int page) {
-        ModelAndView mav = new ModelAndView();
-        String username = (String) session.getAttribute("username");
-        PageRequest pr = PageRequest.of(page,10);
-        Page<Accom> mylist =acr.searchmineonsale(username,pr);
-        mav.addObject("mylist", mylist);
-
-        long maxpage = (acr.countmyonsalelist(username) -1L) / 10L +1L;
-        long maxmove = Math.min(maxpage,(long)page + 6L);
-        long minmove = Math.max(1L,(long)page-4L);
-        List<Long>pageNav = new LinkedList<>();
-        for(long i =minmove ; i <= maxmove ; i++){
-            pageNav.add(i);
-        }
-        mav.addObject("pageS",page);
-        mav.addObject("pNavS",pageNav);
-        mav.setViewName("myAcc");
-        return mav;
-    }
+//    @DeleteMapping(value = "/deleteacclist")
+//    public ResponseEntity<String>deleteacclist(@RequestParam List<Integer>accomNumList){
+//        List<Accom>accomlist =acr.manyacc(accomNumList);
+//        for(Accom accom : accomlist){
+//            accom.setOnSale(1);
+//        }
+//        acr.saveAll(accomlist);
+//        dor.deleteAll(dor.manyacc(accomNumList));
+//        return new ResponseEntity<>("성공",HttpStatus.OK);
+//    }
 }

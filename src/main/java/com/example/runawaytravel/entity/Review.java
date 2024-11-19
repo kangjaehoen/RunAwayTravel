@@ -24,11 +24,11 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accomnum")
-    private Accom accomNum;
+    private Accom accom;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username")
-    private User userName;
+    private User user;
 
     private String hiredate;
 
