@@ -33,7 +33,7 @@ public class ReviewRepsoitoryTest {
         Accom accom = new Accom();
         accom.setAccomNum(8);
         PageRequest pageRequest = PageRequest.of(0,4);
-        Page<Review> list = reviewRepostiory.findByAccomNum(accom, pageRequest);
+        Page<Review> list = reviewRepostiory.findByAccom(accom, pageRequest);
         list.stream().forEach(System.out::println);
     }
 
@@ -57,8 +57,8 @@ public class ReviewRepsoitoryTest {
         review.setClean(5);
         review.setScp(5);
         review.setRevContent("안녕하세요 적당히 바람이 시원해 기분이 너무 좋아요 유후");
-        review.setAccomNum(accom);
-        review.setUserName(user);
+        review.setAccom(accom);
+        review.setUser(user);
         review.setHiredate(now);
 
         reviewRepostiory.save(review);
@@ -85,8 +85,8 @@ public class ReviewRepsoitoryTest {
         review.setClean(2);
         review.setScp(5);
         review.setRevContent("안녕하세요 적당히 바람이 시원해 기분이 너무 좋아요 유후");
-        review.setAccomNum(accom);
-        review.setUserName(user);
+        review.setAccom(accom);
+        review.setUser(user);
         review.setHiredate(now);
 
         reviewRepostiory.save(review);

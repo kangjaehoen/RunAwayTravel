@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ReviewRepostiory extends JpaRepository<Review,Integer> {
-    public Page<Review> findByAccomNum(Accom accomNum, PageRequest pageRequest);
+    public Page<Review> findByAccom(Accom accomNum, PageRequest pageRequest);
 
     @Query(" SELECT new com.example.runawaytravel.dto.ReviewRatingDTO( " +
             " COUNT(r) AS reviewCount, " +
@@ -27,9 +27,9 @@ public interface ReviewRepostiory extends JpaRepository<Review,Integer> {
             " ROUND(AVG(r.clean),1) AS cleanAvg, " +
             " ROUND(AVG(r.scp),1) AS scpAvg ) " +
             " FROM Review r " +
-            " JOIN r.accomNum a " +
+            " JOIN r.accom a " +
             " WHERE a.accomNum = :accomNum ")
     public ReviewRatingDTO rating(@Param("accomNum") int accomNum);
 
-    public Page<Review> findByAccomNumAndRevContentContaining(Accom accomNum, String search,PageRequest pageRequest);
+    public Page<Review> findByAccomAndRevContentContaining(Accom accomNum, String search,PageRequest pageRequest);
 }

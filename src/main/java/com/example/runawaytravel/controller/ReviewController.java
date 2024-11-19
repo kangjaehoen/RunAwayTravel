@@ -38,7 +38,7 @@ public class ReviewController {
         Accom accom = new Accom();
         accom.setAccomNum(num);
         PageRequest pageRequest = PageRequest.of(page ,size);
-        Page<Review> reviewPage = reviewRepostiory.findByAccomNum(accom, pageRequest);// accomNum
+        Page<Review> reviewPage = reviewRepostiory.findByAccom(accom, pageRequest);// accomNum
         System.out.println(reviewPage);
         List<Review> list = reviewPage.toList();
 
@@ -100,7 +100,7 @@ public class ReviewController {
         accom.setAccomNum(num);
 
 
-        Page<Review> reviewPage =  reviewRepostiory.findByAccomNumAndRevContentContaining(accom,search,pageRequest);
+        Page<Review> reviewPage =  reviewRepostiory.findByAccomAndRevContentContaining(accom,search,pageRequest);
         List<Review> list = reviewPage.toList();
 
         HashMap map = new HashMap();
