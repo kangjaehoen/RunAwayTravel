@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        @media (max-width: 600px) {
+          .selmenu {
+            display: none;
+          }
+        }
+
+    </style>
+</head>
+<body>
+<nav th:fragment="nav" class="selnav">
+    <div class="selmenu">
+    <label>[[${session.username}]]님 안녕하세요.</label>
+        <ul>
+            <li><a href="/accregist">숙소등록</a></li>
+            <li><a href="/myacclist">나의 숙소 리스트</a></li>
+            <li><a href="/rCheck">예약 내역</a></li>
+            <li><a href="/pCheck">결제 내역</a></li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>
