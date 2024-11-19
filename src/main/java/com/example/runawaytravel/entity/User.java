@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -11,6 +12,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
+@NoArgsConstructor
 public class User {
     @Id
     @Column(length = 30)
@@ -21,4 +23,9 @@ public class User {
     private String gender;
     private String birth;
     private String accountnum;
+    private String role;
+
+    public User(String username){
+        this.username = username;
+    }
 }
