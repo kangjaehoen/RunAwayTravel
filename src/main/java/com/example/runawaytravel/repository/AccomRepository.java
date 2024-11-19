@@ -24,4 +24,10 @@ public interface AccomRepository extends JpaRepository<Accom, Integer> {
     //판매중리스트불러오기
     @Query("select t from Accom t where t.user.username = :username and t.onSale =1")
     public  Page<Accom> searchmineonsale(String username, PageRequest pageRequest);
+    //숙소 한개 정보 가지고 오기
+    @Query("select t from Accom t join fetch t.user where t.accomNum = :accomNum")
+    public Accom oneacc(int accomNum);
+    //숙소 여러개 정보 가지고 오기
+    @Query("select t from Accom t join fetch t.user where t.accomNum in :accomNum")
+    public List<Accom> manyacc(List<Integer> accomNum);
 }

@@ -2,7 +2,8 @@ package com.example.runawaytravel.repository;
 
 import com.example.runawaytravel.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends JpaRepository<User,String > {
+public interface UserRepository extends JpaRepository<User, String> {
+    Boolean existsByUsername(String username);
+    User findByUsername(String username); //조회 메서드
 }

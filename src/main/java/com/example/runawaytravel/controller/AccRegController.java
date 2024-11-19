@@ -30,55 +30,66 @@ public class AccRegController {
     DayoffRepository dor;
 
     @PostMapping("/accUpload")
-    public ResponseEntity<String> accreg(HttpSession session, @ModelAttribute Accom accom, @RequestParam(required = false) List<MultipartFile> imageUpload, @ModelAttribute AccomImage ai, @RequestParam(value = "day", required = false) LinkedList<Integer> days){
+    public ResponseEntity<String> regAcc(HttpSession session, @ModelAttribute Accom accom, @RequestParam(required = false) List<MultipartFile> imageUpload, @ModelAttribute AccomImage ai, @RequestParam(value = "dayoff", required = false) LinkedList<Integer> days) {
         //session에서 username가지고 오기
-        String username = (String)session.getAttribute("username");
-        if (username==null){
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
             username = "testID";
         }
+        //저장할 accom 세팅
+        accom = setting(accom,username,days);
+        //테이블에 저장
+        Accom savedAccom = acr.save(accom);
+        settingDayoff(days,savedAccom);
+        settingImg(savedAccom,ai,imageUpload);
+        return new ResponseEntity<>("성공", HttpStatus.CREATED);
+    }
+    public Accom setting(Accom accom, String username, List<Integer>days){
         accom.setUserUsername(username);
-
+        accom.setRegDate(LocalDate.now());
+        accom.setOnSale(1);
         //accom 테이블에 휴일날짜 넣기
         if (days != null && !days.isEmpty()) {
-            String dayoff ="";
-            for(int elem : days){
+            String dayoff = "";
+            for (int elem : days) {
                 dayoff += String.valueOf(elem);
             }
             accom.setDayoff(dayoff);
         }
-        //테이블에 저장
-        Accom savedaccom = acr.save(accom);
-
-        //closed 테이블
+        return accom;
+    }
+    public void settingDayoff(List<Integer>days, Accom savedAccom){
+        dor.deleteAll(dor.oneacc(savedAccom.getAccomNum()));//초기화
         if (days != null && !days.isEmpty()) {
-            List<LocalDate> oneweekdayoff = new ArrayList<>() ;
-            LocalDate start = accom.getRegDate();
+            List<LocalDate> oneweekdayoff = new ArrayList<>();
+            LocalDate start = savedAccom.getRegDate();
             int startdayofweek = start.getDayOfWeek().getValue();
-            for(int elem : days){
-                if(elem<startdayofweek){
-                    oneweekdayoff.add(start.plusDays(elem+7));
-                } else{
+            for (int elem : days) {
+                if (elem < startdayofweek) {
+                    oneweekdayoff.add(start.plusDays(elem + 7));
+                } else {
                     oneweekdayoff.add(start.plusDays(elem));
                 }
             }
 
-            List<Dayoff>dayoffs=new ArrayList<>();
-            for(int i = 0 ; i<52 ; i++){
-                for(LocalDate elem : oneweekdayoff){
+            List<Dayoff> dayoffs = new ArrayList<>();
+            for (int i = 0; i < 52; i++) {
+                for (LocalDate elem : oneweekdayoff) {
                     Dayoff day = new Dayoff();
-                    day.setAccomNum(savedaccom.getAccomNum());
+                    day.setAccomNum(savedAccom.getAccomNum());
                     day.setDate(elem);
                     dayoffs.add(day);
                 }
-                oneweekdayoff = oneweekdayoff.stream().map(e->e.plusDays(7)).collect(Collectors.toList());
+                oneweekdayoff = oneweekdayoff.stream().map(e -> e.plusDays(7)).collect(Collectors.toList());
             }
             dor.saveAll(dayoffs);
         }
-
-        //이미지 넣기
-        ai.setAccomNum(savedaccom);
+    }
+    public void settingImg(Accom savedAccom, AccomImage ai, List<MultipartFile>imageUpload){
+        ai.setAccom(savedAccom);
         if (imageUpload != null) {
-            String path = "c:/kosa/project1/" + ai.getAccomNum().getAccomNum();
+            dor.deleteAll(dor.oneacc(ai.getAccom().getAccomNum())); //새로운 사진 있을 때만 초기화
+            String path = "c:/kosa/project1/" + ai.getAccom().getAccomNum();
             File isDir = new File(path);
             if (!isDir.exists()) {
                 isDir.mkdir();
@@ -90,8 +101,11 @@ public class AccRegController {
                         String originalFileName = mfile.getOriginalFilename();
                         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
                         String filePath = String.valueOf(path + "/" + UUID.randomUUID().toString() + extension);
-                        ai.setFilePath(filePath);
-                        air.save(ai);
+                        AccomImage eachai = new AccomImage();
+                        eachai.setAccom(savedAccom);
+                        eachai.setFilePath(filePath);
+                        eachai.setFilePath(filePath);
+                        air.save(eachai);
                         File imgF = new File(filePath);
                         mfile.transferTo(imgF);
                     } catch (IOException | StringIndexOutOfBoundsException | IllegalStateException e) {
@@ -100,32 +114,51 @@ public class AccRegController {
                 }
             }
         }
-        ResponseEntity<String> entity;
-        entity = new ResponseEntity<>("성공", HttpStatus.CREATED);
-        return entity;
     }
 
-    @PostMapping(value = "/accload")
-    public ResponseEntity<Map<String, Object>> loadaccdata(@RequestParam int accomNum){
-        Map response = new HashMap<String,Object>();
-        Optional<Accom> oneAcc = acr.findById(accomNum);
-        if(oneAcc.isPresent()){
-            response.put("oneAcc",acr.findById(accomNum).get());
-            return new ResponseEntity<>(response,HttpStatus.OK);
+    @GetMapping(value = "/accLoad")
+    public ResponseEntity<Map<String, Object>> loadAcc(@RequestParam int accomNum) {
+        Map response = new HashMap<String, Object>();
+        Accom oneAcc = acr.oneacc(accomNum);
+        if (oneAcc != null) {
+            response.put("oneAcc", oneAcc);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             System.out.println("해당 숙소번호는 없음");
-            response.put("oneAcc","해당 숙소번호 없음");
-            return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+            response.put("oneAcc", "해당 숙소번호 없음");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
+
     @DeleteMapping(value = "/accDel")
-    public ResponseEntity<String>deleteAcc(){
-        return new ResponseEntity<>("삭제성공",HttpStatus.OK);
+    public ResponseEntity<String> deleteAcc(@RequestParam int accomNum) {
+        System.out.println("삭제할 숙소번호 : " + accomNum);
+        //숙소 테이블 onSale 변경
+        Accom trash = acr.oneacc(accomNum);
+        trash.setOnSale(2);
+        acr.save(trash);
+        //쉬는날 테이블 제거
+        dor.deleteAll(dor.oneacc(accomNum));
+        //이미지 테이블 제거
+        //파일 삭제
+        String path = "c:/kosa/project1/" + accomNum;
+        File isDir = new File(path);
+        if (isDir.exists()) {
+            File[] files = isDir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    file.delete();
+                }
+            }
+            isDir.delete();
+        }
+        air.deleteAll(air.oneacc(accomNum));
+        return new ResponseEntity<>("삭제성공", HttpStatus.OK);
     }
 
     //test1
     @PostMapping("/uploadtest1")
-    public ResponseEntity<String> accregtest1(){
-        return new ResponseEntity<>("삽입성공",HttpStatus.CREATED);
+    public ResponseEntity<String> accregtest1() {
+        return new ResponseEntity<>("삽입성공", HttpStatus.CREATED);
     }
 }

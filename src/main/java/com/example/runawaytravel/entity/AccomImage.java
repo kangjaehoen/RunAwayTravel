@@ -16,7 +16,7 @@ public class AccomImage {
     private int imagenum;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accomnum")
-    private Accom accomNum;
+    private Accom accom;
     @Column(name="filepath", length=5000)
     private String filePath;
 }
