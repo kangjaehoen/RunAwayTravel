@@ -39,22 +39,18 @@ public class Reservation {
 
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="accomnum")
-    private Accom accomNum;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="review")
-    private Review review;
-
-    private String chkinTime;
-    private long reviewcnt;
-    private String reviewRate;
-
-    @ManyToOne
-    @JoinColumn(name = "accom")  // 숙소 정보와 연관
     private Accom accom;
 
-    public void setAccom(Accom accom) {
-        this.accom = accom;
-    }
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="review")
+//    private Review review;
+
+//    @ManyToOne
+//    @JoinColumn(name = "accom")  // 숙소 정보와 연관
+//    private Accom accom;
+
+//    public void setAccom(Accom accom) {
+//        this.accom = accom;
+//    }
 
 }

@@ -79,14 +79,4 @@ public class Accom {
         return chkin_Time;
     }
 
-    // 기본 생성자
-    public Accom() {
-
-    }
-
-    // accomNum을 파라미터로 받는 생성자 추가
-    public Accom(int accomNum) {
-        this.accomNum = accomNum;
-    }
-
 }

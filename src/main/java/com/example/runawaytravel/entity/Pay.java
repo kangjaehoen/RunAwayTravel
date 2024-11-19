@@ -19,7 +19,8 @@ public class Pay {
     @Column(name = "paydate")
     private LocalDate payDate;
 
-    private String pay_Staus;
+    @Column(name="pay_Status")
+    private Character pay_Status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="accomnum")

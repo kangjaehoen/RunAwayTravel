@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservation")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ReservationController {
     @Autowired
     ReservationRepository resRep;
@@ -27,20 +27,23 @@ public class ReservationController {
     AccomRepository accomRep;
 
 
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> oneReserv(@RequestBody Reservation reservation) {
-        Accom accom = reservation.getAccomNum();
-        int accomnum= accom.getAccomNum();
+    @GetMapping("/info")
+    public ResponseEntity<Map<String, Object>> oneReserv(@RequestParam("accomNum") int accomnum) {
+//        Accom accom = reservation.getAccom();
+//        int accomnum= accom.getAccomNum();
+//숙소 정보 조회
+        Accom accom =accomRep.findById(accomnum).orElseThrow(() ->
+                new IllegalArgumentException("Invalid accomNum:"+ accomnum));
 
         long revCnt=resRep.countReview(accomnum);
         String revRate=resRep.reviewRating(accomnum);
         Integer price=resRep.accomPrice(accomnum);
 
         Map<String, Object> response= new HashMap<>();
+        response.put("accom", accom);
         response.put("revCnt", revCnt);
         response.put("revRate", revRate );
         response.put("price", price);
-        response.put("reservation", reservation);
 
         ResponseEntity entity=new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -52,7 +55,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Reservation> reservBtn(@RequestBody Reservation reservation) {
 
-        Accom accom = reservation.getAccomNum();
+        Accom accom = reservation.getAccom();
         int accomnum= accom.getAccomNum();
         Accom accomInfo= accomRep.findById(accomnum).get();
 
@@ -64,9 +67,9 @@ public class ReservationController {
         long revCnt=resRep.countReview(accomnum);
         String revRate=resRep.reviewRating(accomnum);
 
-        reservation.setChkinTime(fmChkTime);
-        reservation.setReviewcnt(revCnt);
-        reservation.setReviewRate(revRate);
+//        reservation.setChkinTime(fmChkTime);
+//        reservation.setReviewcnt(revCnt);
+//        reservation.setReviewRate(revRate);
 
 
         return new ResponseEntity<>(reservation, HttpStatus.OK);
@@ -88,7 +91,7 @@ public class ReservationController {
     @PutMapping("/insertRes")
     public ResponseEntity<?> insertRes(@RequestBody Reservation reservation) {
 
-            int accomnum = reservation.getAccomNum().getAccomNum();
+            int accomnum = reservation.getAccom().getAccomNum();
             Optional<Accom> accom = accomRep.findById(accomnum);
 
             if(accom.isPresent()){

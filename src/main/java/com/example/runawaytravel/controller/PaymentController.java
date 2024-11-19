@@ -11,13 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
 @RestController
 @RequestMapping("/payment")
+@CrossOrigin(origins = "http://localhost:5173")
 public class PaymentController {
     @Autowired
     PayRepository payResp;
@@ -92,5 +91,6 @@ public class PaymentController {
              return ResponseEntity.status(HttpStatus.NOT_FOUND).body("결제정보가 없습니다:"+impUid);
          }
     }
+
 
 }

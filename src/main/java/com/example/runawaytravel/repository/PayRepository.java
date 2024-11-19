@@ -29,7 +29,7 @@ public interface PayRepository extends JpaRepository<Pay, String> {
 
     //결제취소
     @Modifying
-    @Query("update Pay p set p.pay_Staus='N' where p.impUid= :impuid")
+    @Query("update Pay p set p.pay_Status='N' where p.impUid= :impuid")
     public int cancelPay(@Param("impUid") String impuid);
 
     /*
