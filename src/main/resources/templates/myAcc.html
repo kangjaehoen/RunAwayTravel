@@ -41,7 +41,7 @@
         <th:block th:if="${mylist}">
             <tbody id="myacclist" th:each="acc, no : ${mylist}">
             <tr th:class="${no.count % 2 == 0} ? 'even-row' : 'odd-row'"
-                th:onclick="goRegister(event, [[${acc.username.username}]],[[${acc.accomNum}]])">
+                th:onclick="goRegister(event, [[${acc.user.username}]],[[${acc.accomNum}]])">
                 <td class="tableNarrow"><input type="checkbox" onclick="event.stopPropagation();" th:attr="data-check=${acc.accomNum}"></td>
                 <td class="tableNarrow"><span th:text="${no.count}"></span></td>
                 <td><span th:text="${acc.accName}"></span></td>

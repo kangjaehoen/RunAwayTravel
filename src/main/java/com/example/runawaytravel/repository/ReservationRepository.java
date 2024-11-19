@@ -10,7 +10,19 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
+public interface ReservationRepository extends JpaRepository<Reservation,Integer> {
+    @Query("select distinct r from Reservation r" +
+            " join fetch r.accom a" +
+            " join fetch r.user u1" +
+            " join fetch a.user u2" +
+            " where u2.username = :username and r. chkin_Date <= :end and chkout_Date >= :start")
+    public List<Reservation> resMonth(String username, LocalDate start, LocalDate end);
+    @Query("select distinct r from Reservation r" +
+            " join fetch r.accom a" +
+            " join fetch r.user u1" +
+            " join fetch a.user u2" +
+            " where a.accomNum = :accomNum and r. chkin_Date <= :end and chkout_Date >= :start")
+    public List<Reservation> resMonthbyAccomNum(int accomNum, LocalDate start, LocalDate end);
 
     //숙소정보
     @Query("select r from Reservation r inner join fetch r.accom a where r.accom.accomNum = :accomnum")
