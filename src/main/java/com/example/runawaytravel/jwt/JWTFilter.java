@@ -23,9 +23,9 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-    //request에서 authorization 헤더를 찾음
-    String authorization = req.getHeader("Authorization");
-    //뽑아온 키값에서 authorization 변수에 토큰이 담겼는지, 그게 null인지 아님 인증방식이 bearer 적두사를 가지는지 (아닌경우 메서드 종료)
+        //request에서 authorization 헤더를 찾음
+        String authorization = req.getHeader("Authorization");
+        //뽑아온 키값에서 authorization 변수에 토큰이 담겼는지, 그게 null인지 아님 인증방식이 bearer 적두사를 가지는지 (아닌경우 메서드 종료)
         if (authorization == null || !authorization.startsWith("Bearer ")) {
             System.out.println("token null or invalid");
             filterChain.doFilter(req, res);
@@ -50,7 +50,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         User user = new User();
         user.setUsername(username);
-        user.setPw("temppw");
+        user.setPassword("temppw");
         user.setRole(role); //유저 객체를 만든다
 
         //커스텀유저디테일에 객체를 넣어서 유저디테일을 하나 만들어 준다

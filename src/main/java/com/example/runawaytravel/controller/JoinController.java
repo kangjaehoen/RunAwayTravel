@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins="http://localhost:5175", allowedHeaders = "*", exposedHeaders="Authorization", allowCredentials = "true")
+@CrossOrigin(origins="http://localhost:5173", allowedHeaders = "*", exposedHeaders="Authorization", allowCredentials = "true")
 public class JoinController {
 
     private final JoinService joinService;

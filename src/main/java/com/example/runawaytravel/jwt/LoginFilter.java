@@ -41,7 +41,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         JSONObject jsonObject = new JSONObject(requestBody);
 
         String username = jsonObject.getString("username");
-        String password = jsonObject.getString("pw");
+        String password = jsonObject.getString("password");
 
         System.out.println(username + " 유저이름");
         System.out.println(password + " 유저비번");
@@ -71,11 +71,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             String role = auth.getAuthority(); //role값 가져오기
 
             //뽑아낸 username 과 role값을 가지고 jwtUtil에 토큰을 만들어 달라고 전달한다.
-            String token = jwtUtil.createJwt(username, role, 60*60*10L);
+            String token = jwtUtil.createJwt(username, role, 60*60L);
 
             res.addHeader("Authorization", "Bearer " + token); //인증방식을 붙이고 토큰 붙이고 사용 (필수) HTTP 인증 방식 -> rfc 7235 정의에 따라 인증 헤더 형태를 가져야 함
         }catch (Exception e){
-            log.info("sucees 에러");
+            log.info("succees 에러");
             e.printStackTrace();
             log.error(e.getMessage());
         }

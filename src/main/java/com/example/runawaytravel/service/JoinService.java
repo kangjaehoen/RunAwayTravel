@@ -20,7 +20,7 @@ public class JoinService {
     public void joinProcess(JoinDTO joinDTO) {
         System.out.println(joinDTO);
         String username = joinDTO.getUsername();
-        String password = joinDTO.getPw();
+        String password = joinDTO.getPassword();
         String name = joinDTO.getName();
         String email = joinDTO.getEmail();
         String gender = joinDTO.getGender();
@@ -36,7 +36,7 @@ public class JoinService {
         User data = new User();
 
         data.setUsername(username);
-        data.setPw(bCryptPasswordEncoder.encode(password));
+        data.setPassword(bCryptPasswordEncoder.encode(password));
         data.setName(name);
         data.setEmail(email);
         data.setGender(gender);

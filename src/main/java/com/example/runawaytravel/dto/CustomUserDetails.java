@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {
-    private final User user; //생성자 방식으로 초기화해야함
+    private final User user; //생성자 방 식으로 초기화해야함
     public CustomUserDetails(User user) {
         this.user = user;
     }
@@ -28,7 +28,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() { //비밀번호값
-        return user.getPw();
+        return user.getPassword();
     }
 
     @Override

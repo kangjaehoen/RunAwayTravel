@@ -9,7 +9,7 @@ public class JoinDTO {
     private String username;
     private String name;
     private String email;
-    private String pw;
+    private String password;
     private String gender;
     private String birth;
     private String role;

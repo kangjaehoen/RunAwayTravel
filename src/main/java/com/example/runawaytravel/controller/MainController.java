@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @ResponseBody
 @RequestMapping("/api")
-@CrossOrigin(origins="http://localhost:5175", allowedHeaders = "*", exposedHeaders="Authorization", allowCredentials = "true")
+@CrossOrigin(origins="http://localhost:5173", allowedHeaders = "*", exposedHeaders="Authorization", allowCredentials = "true")
 public class MainController {
 
-    @GetMapping("/")
+    @GetMapping("/main")
     public ResponseEntity<String> mainP() {
         return ResponseEntity.ok("main controller");
     }
