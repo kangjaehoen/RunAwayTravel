@@ -19,11 +19,12 @@ public class User {
     private String username;
     private String name;
     private String email;
-    private String pw;
+    private String password;
     private String gender;
     private String birth;
-    private String accountnum;
-    private String role;
+    @Column(name = "accountnum")
+    private String accountNum;
+    private String role="USER";
 
     public User(String username){
         this.username = username;
