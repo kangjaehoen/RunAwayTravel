@@ -30,8 +30,7 @@ public interface AccomRepository extends JpaRepository<Accom, Integer> {
     //숙소 여러개 정보 가지고 오기
     @Query("select t from Accom t join fetch t.user where t.accomNum in :accomNum")
     public List<Accom> manyacc(List<Integer> accomNum);
-    @Query("select count(t) from Accom t where t.username.username = :username and t.onSale=1")
-    long countmyonsalelist(String username);
+
 
     ////////
     //숙소정보
@@ -39,12 +38,12 @@ public interface AccomRepository extends JpaRepository<Accom, Integer> {
 
 
     //리뷰 개수
-    @Query("select count(r) from Review r where r.accomNum.accomNum = :accomnum")
+    @Query("select count(r) from Review r where r.accom.accomNum = :accomnum")
     public long countReview(@Param("accomnum") int accomnum);
 
 
     //리뷰 별점
-    @Query("select round(avg(r.satisfy),1) from Review r inner join r.accomNum a where a.accomNum= :accomnum")
+    @Query("select round(avg(r.satisfy),1) from Review r inner join r.accom a where a.accomNum= :accomnum")
     public  String reviewRating(@Param("accomnum") int accomnum);
 
 
