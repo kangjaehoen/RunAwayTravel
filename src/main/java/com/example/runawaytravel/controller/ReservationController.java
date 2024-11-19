@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,11 +40,14 @@ public class ReservationController {
         String revRate=resRep.reviewRating(accomnum);
         Integer price=resRep.accomPrice(accomnum);
 
+        List<Reservation> reservation= resRep.findByAccomnum(accomnum);
+
         Map<String, Object> response= new HashMap<>();
         response.put("accom", accom);
         response.put("revCnt", revCnt);
         response.put("revRate", revRate );
         response.put("price", price);
+        response.put("reservation", reservation);
 
         ResponseEntity entity=new ResponseEntity<>(response, HttpStatus.OK);
 
