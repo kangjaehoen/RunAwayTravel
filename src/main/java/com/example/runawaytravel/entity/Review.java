@@ -13,7 +13,6 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int rnum;
-
     private int satisfy;
     private int accuracy;
     private int clean;

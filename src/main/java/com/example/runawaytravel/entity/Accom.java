@@ -1,13 +1,15 @@
 package com.example.runawaytravel.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-@Getter@Setter@ToString@Entity
+@Getter
+@Setter
+@ToString
+@Entity
+@NoArgsConstructor
 public class Accom {
     @Column(name="accname")
     private String accName;
