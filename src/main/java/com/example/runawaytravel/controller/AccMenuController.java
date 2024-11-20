@@ -2,7 +2,6 @@ package com.example.runawaytravel.controller;
 
 import com.example.runawaytravel.DTO.PageDTO;
 import com.example.runawaytravel.entity.Accom;
-import com.example.runawaytravel.entity.Dayoff;
 import com.example.runawaytravel.repository.AccomImageRepository;
 import com.example.runawaytravel.repository.AccomRepository;
 import com.example.runawaytravel.repository.DayoffRepository;
@@ -62,14 +61,4 @@ public class AccMenuController {
         acr.saveAll(list);
         return new ResponseEntity<String>("성공",HttpStatus.OK);
     }
-//    @DeleteMapping(value = "/deleteacclist")
-//    public ResponseEntity<String>deleteacclist(@RequestParam List<Integer>accomNumList){
-//        List<Accom>accomlist =acr.manyacc(accomNumList);
-//        for(Accom accom : accomlist){
-//            accom.setOnSale(1);
-//        }
-//        acr.saveAll(accomlist);
-//        dor.deleteAll(dor.manyacc(accomNumList));
-//        return new ResponseEntity<>("성공",HttpStatus.OK);
-//    }
 }

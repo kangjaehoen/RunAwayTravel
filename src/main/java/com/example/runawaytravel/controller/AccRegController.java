@@ -88,9 +88,20 @@ public class AccRegController {
     public void settingImg(Accom savedAccom, AccomImage ai, List<MultipartFile>imageUpload){
         ai.setAccom(savedAccom);
         if (imageUpload != null) {
-            dor.deleteAll(dor.oneacc(ai.getAccom().getAccomNum())); //새로운 사진 있을 때만 초기화
-            String path = "c:/kosa/project1/" + ai.getAccom().getAccomNum();
+            //이미지 테이블 제거
+            //새로운 사진 있을 때만 초기화
+            air.deleteAll(air.oneacc(savedAccom.getAccomNum()));
+            //파일 삭제
+            String path = "c:/education/runawaytravel-vue/public/images/" + savedAccom.getAccomNum();//저장폴더
             File isDir = new File(path);
+            if (isDir.exists()) {
+                File[] files = isDir.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        file.delete();
+                    }
+                }
+            }
             if (!isDir.exists()) {
                 isDir.mkdir();
             }
@@ -100,12 +111,14 @@ public class AccRegController {
                     try {
                         String originalFileName = mfile.getOriginalFilename();
                         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                        String filePath = String.valueOf(path + "/" + UUID.randomUUID().toString() + extension);
+                        String filename = UUID.randomUUID().toString() + extension;//파일이름
+                        //테이블에저장
                         AccomImage eachai = new AccomImage();
                         eachai.setAccom(savedAccom);
-                        eachai.setFilePath(filePath);
-                        eachai.setFilePath(filePath);
+                        eachai.setFilePath(ai.getAccom().getAccomNum()+"/"+filename);
                         air.save(eachai);
+                        //서버에 저장
+                        String filePath = String.valueOf(path +"/"+ filename); //파일저장위치
                         File imgF = new File(filePath);
                         mfile.transferTo(imgF);
                     } catch (IOException | StringIndexOutOfBoundsException | IllegalStateException e) {
@@ -141,7 +154,7 @@ public class AccRegController {
         dor.deleteAll(dor.oneacc(accomNum));
         //이미지 테이블 제거
         //파일 삭제
-        String path = "c:/kosa/project1/" + accomNum;
+        String path = "c:/education/runawaytravel-vue/public/images/" + accomNum;//저장폴더
         File isDir = new File(path);
         if (isDir.exists()) {
             File[] files = isDir.listFiles();
