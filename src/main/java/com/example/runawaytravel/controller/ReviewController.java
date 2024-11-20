@@ -1,6 +1,5 @@
 package com.example.runawaytravel.controller;
 
-import com.example.runawaytravel.dto.ReviewRatingDTO;
 import com.example.runawaytravel.entity.Accom;
 import com.example.runawaytravel.entity.Review;
 import com.example.runawaytravel.repository.ReviewRepostiory;
@@ -51,11 +50,11 @@ public class ReviewController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @GetMapping("/rate/{num}")
+/*    @GetMapping("/rate/{num}")
     public ResponseEntity<ReviewRatingDTO> findByAccomReviewRate(@PathVariable int num){
        ReviewRatingDTO dto = reviewRepostiory.rating(num); // accomNum
         return new ResponseEntity<>(dto,HttpStatus.OK);
-    }
+    }*/
 
    @PostMapping
     public ResponseEntity<String> saveReview(@RequestBody Map<String,Object> review){

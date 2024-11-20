@@ -1,21 +1,15 @@
 package com.example.runawaytravel.repository;
 
-import com.example.runawaytravel.dto.ReviewRatingDTO;
 import com.example.runawaytravel.entity.Accom;
 import com.example.runawaytravel.entity.Review;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
 
 public interface ReviewRepostiory extends JpaRepository<Review,Integer> {
     public Page<Review> findByAccom(Accom accomNum, PageRequest pageRequest);
 
-    @Query(" SELECT new com.example.runawaytravel.dto.ReviewRatingDTO( " +
+/*    @Query(" SELECT new com.example.runawaytravel.dto.ReviewRatingDTO( " +
             " COUNT(r) AS reviewCount, " +
             " COUNT(CASE WHEN r.satisfy = 5 THEN 1 END) AS count5, " +
             " COUNT(CASE WHEN r.satisfy = 4 THEN 1 END) AS count4, " +
@@ -29,7 +23,7 @@ public interface ReviewRepostiory extends JpaRepository<Review,Integer> {
             " FROM Review r " +
             " JOIN r.accom a " +
             " WHERE a.accomNum = :accomNum ")
-    public ReviewRatingDTO rating(@Param("accomNum") int accomNum);
+    public ReviewRatingDTO rating(@Param("accomNum") int accomNum);*/
 
     public Page<Review> findByAccomAndRevContentContaining(Accom accomNum, String search,PageRequest pageRequest);
 }

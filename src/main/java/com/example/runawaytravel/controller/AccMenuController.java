@@ -1,6 +1,6 @@
 package com.example.runawaytravel.controller;
 
-import com.example.runawaytravel.DTO.PageDTO;
+import com.example.runawaytravel.dto.PageDTO;
 import com.example.runawaytravel.entity.Accom;
 import com.example.runawaytravel.entity.Dayoff;
 import com.example.runawaytravel.repository.AccomImageRepository;

@@ -8,7 +8,10 @@ import com.example.runawaytravel.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -19,7 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservation")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class ReservationController {
     @Autowired
     ReservationRepository resRep;
@@ -30,9 +33,7 @@ public class ReservationController {
 
     @GetMapping("/info")
     public ResponseEntity<Map<String, Object>> oneReserv(@RequestParam("accomNum") int accomnum) {
-//        Accom accom = reservation.getAccom();
-//        int accomnum= accom.getAccomNum();
-//숙소 정보 조회
+    //숙소 정보 조회
         Accom accom =accomRep.findById(accomnum).orElseThrow(() ->
                 new IllegalArgumentException("Invalid accomNum:"+ accomnum));
 
@@ -71,11 +72,6 @@ public class ReservationController {
         long revCnt=resRep.countReview(accomnum);
         String revRate=resRep.reviewRating(accomnum);
 
-//        reservation.setChkinTime(fmChkTime);
-//        reservation.setReviewcnt(revCnt);
-//        reservation.setReviewRate(revRate);
-
-
         return new ResponseEntity<>(reservation, HttpStatus.OK);
     }
 
@@ -93,22 +89,30 @@ public class ReservationController {
 
 
     @PutMapping("/insertRes")
-    public ResponseEntity<?> insertRes(@RequestBody Reservation reservation) {
+    @Transactional
+    public ResponseEntity<?> insertRes(@RequestBody Map<String,Object> reservinfo ) {
+        Reservation reservation= new Reservation();
 
-            int accomnum = reservation.getAccom().getAccomNum();
-            Optional<Accom> accom = accomRep.findById(accomnum);
+        int accomNum = Integer.valueOf(reservinfo.get("accomNum").toString());
+        Optional<Accom> accom= accomRep.findById(accomNum);
 
-            if(accom.isPresent()){
-                reservation.setAccom(accom.get());
-            }else{
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 숙소가 존재하지 않습니다.");
-            }
-
-            Reservation res= resRep.save(reservation);
-            return ResponseEntity.ok(res);
+        if(accom.isPresent()){
+            reservation.setAccom(accom.get());
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 숙소가 존재하지 않습니다.");
         }
-
+        // 필수 예약 정보 설정하기
+        reservation.setChkin_Date(LocalDate.parse(reservinfo.get("checkIn").toString()));
+        reservation.setChkout_Date(LocalDate.parse(reservinfo.get("checkOut").toString()));
+        reservation.setAdultCnt(Integer.valueOf(reservinfo.get("adultCnt").toString()));
+        reservation.setKidCnt(Integer.valueOf(reservinfo.get("kidCnt").toString()));
+        reservation.setResDate(LocalDate.now());
+        Reservation aa = resRep.save(reservation);
+        reservation.setResNum(aa.getResNum());
+        return ResponseEntity.ok(reservation);
     }
+}
+
 
 
 
