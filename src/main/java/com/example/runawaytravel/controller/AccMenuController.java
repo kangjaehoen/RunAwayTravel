@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,14 +63,4 @@ public class AccMenuController {
         acr.saveAll(list);
         return new ResponseEntity<String>("성공",HttpStatus.OK);
     }
-//    @DeleteMapping(value = "/deleteacclist")
-//    public ResponseEntity<String>deleteacclist(@RequestParam List<Integer>accomNumList){
-//        List<Accom>accomlist =acr.manyacc(accomNumList);
-//        for(Accom accom : accomlist){
-//            accom.setOnSale(1);
-//        }
-//        acr.saveAll(accomlist);
-//        dor.deleteAll(dor.manyacc(accomNumList));
-//        return new ResponseEntity<>("성공",HttpStatus.OK);
-//    }
 }

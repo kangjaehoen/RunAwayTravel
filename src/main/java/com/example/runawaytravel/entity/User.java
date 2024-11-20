@@ -22,9 +22,8 @@ public class User {
     private String password;
     private String gender;
     private String birth;
-    @Column(name = "accountnum")
-    private String accountNum;
-    private String role="USER";
+    private String accountnum;
+    private String role;
 
     public User(String username){
         this.username = username;

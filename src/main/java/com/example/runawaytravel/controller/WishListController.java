@@ -22,8 +22,10 @@ public class WishListController {
     public ResponseEntity<List<WishList>> findByUserName(/*@AuthenticationPrincipal User user*/){
         User userName = new User();
         // userName = user.getUserName();
+
         //임시 아이디 설정
         userName.setUsername("testID");
+        System.out.println("axios 요청 들어옴.");
         List<WishList> list =  wishListRepository.findByUserName(userName);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
