@@ -19,8 +19,8 @@ public interface AccomRepository extends JpaRepository<Accom, Integer> {
             "t.category like concat('%', :key, '%') or " +
             "t.accType like concat('%', :key, '%'))")
     Page<Accom> searchmine(@Param("username") String username,
-                                  @Param("key") String key,
-                                  Pageable pageRequest);
+                           @Param("key") String key,
+                           Pageable pageRequest);
     //판매중리스트불러오기
     @Query("select t from Accom t where t.user.username = :username and t.onSale =1")
     Page<Accom> searchmineonsale(String username, PageRequest pageRequest);

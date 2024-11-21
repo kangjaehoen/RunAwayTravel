@@ -1,7 +1,8 @@
 package com.example.runawaytravel.controller;
 
-import com.example.runawaytravel.DTO.PageDTO;
+import com.example.runawaytravel.dto.PageDTO;
 import com.example.runawaytravel.entity.Accom;
+import com.example.runawaytravel.entity.Dayoff;
 import com.example.runawaytravel.repository.AccomImageRepository;
 import com.example.runawaytravel.repository.AccomRepository;
 import com.example.runawaytravel.repository.DayoffRepository;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

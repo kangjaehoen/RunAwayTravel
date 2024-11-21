@@ -88,11 +88,10 @@ public class AccRegController {
     public void settingImg(Accom savedAccom, AccomImage ai, List<MultipartFile>imageUpload){
         ai.setAccom(savedAccom);
         if (imageUpload != null) {
-            //이미지 테이블 제거
             //새로운 사진 있을 때만 초기화
-            air.deleteAll(air.oneacc(savedAccom.getAccomNum()));
+            String path = "c:/education/runawaytravel-vue/public/images/" + savedAccom.getAccomNum(); //저장위치
+            //이미지 테이블 제거
             //파일 삭제
-            String path = "c:/education/runawaytravel-vue/public/images/" + savedAccom.getAccomNum();//저장폴더
             File isDir = new File(path);
             if (isDir.exists()) {
                 File[] files = isDir.listFiles();
@@ -101,7 +100,11 @@ public class AccRegController {
                         file.delete();
                     }
                 }
+                isDir.delete();
             }
+            air.deleteAll(air.oneacc(savedAccom.getAccomNum()));
+
+            isDir = new File(path);
             if (!isDir.exists()) {
                 isDir.mkdir();
             }
@@ -109,17 +112,17 @@ public class AccRegController {
             if (!list.isEmpty()) {
                 for (MultipartFile mfile : list) {
                     try {
+                        //이름설정
                         String originalFileName = mfile.getOriginalFilename();
                         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                        String filename = UUID.randomUUID().toString() + extension;//파일이름
-                        //테이블에저장
+                        String filename = String.valueOf(UUID.randomUUID().toString() + extension);//파일이름
+                        //테이블 저장
                         AccomImage eachai = new AccomImage();
                         eachai.setAccom(savedAccom);
-                        eachai.setFilePath(ai.getAccom().getAccomNum()+"/"+filename);
+                        eachai.setFilePath( "/images/"+savedAccom.getAccomNum()+"/"+filename );//테이블 저장 이름
                         air.save(eachai);
-                        //서버에 저장
-                        String filePath = String.valueOf(path +"/"+ filename); //파일저장위치
-                        File imgF = new File(filePath);
+                        //서버 저장
+                        File imgF = new File(path+"/"+filename);//실제 서버 저장위치
                         mfile.transferTo(imgF);
                     } catch (IOException | StringIndexOutOfBoundsException | IllegalStateException e) {
                         e.printStackTrace();
@@ -145,7 +148,6 @@ public class AccRegController {
 
     @DeleteMapping(value = "/accDel")
     public ResponseEntity<String> deleteAcc(@RequestParam int accomNum) {
-        System.out.println("삭제할 숙소번호 : " + accomNum);
         //숙소 테이블 onSale 변경
         Accom trash = acr.oneacc(accomNum);
         trash.setOnSale(2);
@@ -154,7 +156,7 @@ public class AccRegController {
         dor.deleteAll(dor.oneacc(accomNum));
         //이미지 테이블 제거
         //파일 삭제
-        String path = "c:/education/runawaytravel-vue/public/images/" + accomNum;//저장폴더
+        String path = "c:/education/runawaytravel-vue/public/images/" + accomNum;
         File isDir = new File(path);
         if (isDir.exists()) {
             File[] files = isDir.listFiles();
