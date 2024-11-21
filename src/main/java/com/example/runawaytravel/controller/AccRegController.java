@@ -119,7 +119,7 @@ public class AccRegController {
                         //테이블 저장
                         AccomImage eachai = new AccomImage();
                         eachai.setAccom(savedAccom);
-                        eachai.setFilePath( savedAccom.getAccomNum()+"/"+filename );
+                        eachai.setFilePath( "/images/"+savedAccom.getAccomNum()+"/"+filename );//테이블 저장 이름
                         air.save(eachai);
                         //서버 저장
                         File imgF = new File(path+"/"+filename);//실제 서버 저장위치
