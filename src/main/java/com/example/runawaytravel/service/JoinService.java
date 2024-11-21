@@ -1,6 +1,6 @@
 package com.example.runawaytravel.service;
 
-import com.example.runawaytravel.dto2.JoinDTO;
+import com.example.runawaytravel.dto.JoinDTO;
 import com.example.runawaytravel.entity.User;
 import com.example.runawaytravel.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

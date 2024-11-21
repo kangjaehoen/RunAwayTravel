@@ -1,6 +1,6 @@
 package com.example.runawaytravel.repository;
 
-import com.example.runawaytravel.dto2.ReviewRatingDTO;
+import com.example.runawaytravel.dto.ReviewRatingDTO;
 import com.example.runawaytravel.entity.Accom;
 import com.example.runawaytravel.entity.Review;
 import org.apache.ibatis.annotations.Param;

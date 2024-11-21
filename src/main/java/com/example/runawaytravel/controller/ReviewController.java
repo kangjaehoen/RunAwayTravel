@@ -1,6 +1,6 @@
 package com.example.runawaytravel.controller;
 
-import com.example.runawaytravel.dto2.ReviewRatingDTO;
+import com.example.runawaytravel.dto.ReviewRatingDTO;
 import com.example.runawaytravel.entity.Accom;
 import com.example.runawaytravel.entity.Review;
 import com.example.runawaytravel.entity.User;
