@@ -1,7 +1,6 @@
 package com.example.runawaytravel.controller;
 
-import com.example.runawaytravel.DTO.CustomUserDetails;
-import com.example.runawaytravel.DTO.PageDTO;
+import com.example.runawaytravel.dto.PageDTO;
 import com.example.runawaytravel.entity.Accom;
 import com.example.runawaytravel.entity.Dayoff;
 import com.example.runawaytravel.entity.User;
@@ -38,7 +37,6 @@ public class AccMenuController {
     @Autowired
     DayoffRepository dor;
 
-
     @PostMapping("/myaccomtable")
     public ResponseEntity<Map<String, Object>> myaccomtable(@RequestBody PageDTO page, Principal principal) {
         if (principal == null || principal.getName() == null || principal.getName().trim().isEmpty()) {
@@ -62,7 +60,6 @@ public class AccMenuController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-
     @PostMapping(value = "/changeonsale")
     @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<String>changeonsale(@RequestBody List<Integer>accomNumList){

@@ -41,7 +41,7 @@ public class JoinService {
         data.setEmail(email);
         data.setGender(gender);
         data.setBirth(birth);
-        data.setRole("ROLE_USER");
+        data.setRole("ROLE_ADMIN");
 
         userRepository.save(data);
     }

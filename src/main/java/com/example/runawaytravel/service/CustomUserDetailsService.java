@@ -1,6 +1,6 @@
 package com.example.runawaytravel.service;
 
-import com.example.runawaytravel.DTO.CustomUserDetails;
+import com.example.runawaytravel.dto.CustomUserDetails;
 import com.example.runawaytravel.entity.User;
 import com.example.runawaytravel.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;

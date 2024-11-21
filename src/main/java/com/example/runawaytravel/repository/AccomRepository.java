@@ -18,19 +18,28 @@ public interface AccomRepository extends JpaRepository<Accom, Integer> {
             "t.detailAddress like concat('%', :key, '%') or " +
             "t.category like concat('%', :key, '%') or " +
             "t.accType like concat('%', :key, '%'))")
-    public Page<Accom> searchmine(@Param("username") String username,
-                                  @Param("key") String key,
-                                  Pageable pageRequest);
+    Page<Accom> searchmine(@Param("username") String username,
+                           @Param("key") String key,
+                           Pageable pageRequest);
     //판매중리스트불러오기
     @Query("select t from Accom t where t.user.username = :username and t.onSale =1")
-    public  Page<Accom> searchmineonsale(String username, PageRequest pageRequest);
+    Page<Accom> searchmineonsale(String username, PageRequest pageRequest);
     //숙소 한개 정보 가지고 오기
     @Query("select t from Accom t join fetch t.user where t.accomNum = :accomNum")
-    public Accom oneacc(int accomNum);
+    Accom oneacc(int accomNum);
     //숙소 여러개 정보 가지고 오기
     @Query("select t from Accom t join fetch t.user where t.accomNum in :accomNum")
-    public List<Accom> manyacc(List<Integer> accomNum);
-
+    List<Accom> manyacc(List<Integer> accomNum);
+    //메인페이지 검색
+    @Query("select t from Accom t join fetch t.user where t.onSale = 1 and" +
+            " ( t.accType like concat ('%', :key ,'%') or " +
+            "t.accName like concat ('%', :key ,'%') or " +
+            "t.category like concat ('%', :key ,'%') " +
+            ")")
+    Page<Accom> searchAccom(String key, Pageable pageable);
+    @Query("select t from Accom t where t.onSale = 1 " +
+            " order by function('rand')")
+    Page<Accom> randomAccom(Pageable pageable);
 
     ////////
     //숙소정보

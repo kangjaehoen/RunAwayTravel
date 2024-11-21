@@ -44,23 +44,23 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-                http
-            .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-                            @Override
-                            public CorsConfiguration getCorsConfiguration(HttpServletRequest req) {
-                                CorsConfiguration config = new CorsConfiguration();
+        http
+                .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest req) {
+                        CorsConfiguration config = new CorsConfiguration();
 
-                                config.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
-                                config.setAllowedMethods(Collections.singletonList("*"));
-                                config.setAllowCredentials(true);
-                                config.setAllowedHeaders(Collections.singletonList("*"));
-                                config.setMaxAge(3600L);
-                                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                                source.registerCorsConfiguration("/api**", config);
-                                config.addExposedHeader("Authorization");
-                                return config;
-                            }
-                        })));
+                        config.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+                        config.setAllowedMethods(Collections.singletonList("*"));
+                        config.setAllowCredentials(true);
+                        config.setAllowedHeaders(Collections.singletonList("*"));
+                        config.setMaxAge(3600L);
+                        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                        source.registerCorsConfiguration("/api**", config);
+                        config.addExposedHeader("Authorization");
+                        return config;
+                    }
+                })));
         http
                 .csrf((auth) -> auth.disable());
         http

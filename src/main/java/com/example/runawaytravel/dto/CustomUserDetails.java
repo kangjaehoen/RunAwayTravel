@@ -1,4 +1,4 @@
-package com.example.runawaytravel.DTO;
+package com.example.runawaytravel.dto;
 
 import com.example.runawaytravel.entity.User;
 import org.springframework.security.core.GrantedAuthority;

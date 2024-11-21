@@ -3,6 +3,7 @@ package com.example.runawaytravel.controller;
 import com.example.runawaytravel.dto.ReviewRatingDTO;
 import com.example.runawaytravel.entity.Accom;
 import com.example.runawaytravel.entity.Review;
+import com.example.runawaytravel.entity.User;
 import com.example.runawaytravel.repository.ReviewRepostiory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +33,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{num}")
-    public ResponseEntity<HashMap> findByAccomNumReview(@PathVariable int num,
+    public ResponseEntity<HashMap> findByAccomReview(@PathVariable int num,
                                                              @RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "4") int size){
         Accom accom = new Accom();
@@ -51,20 +52,38 @@ public class ReviewController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @GetMapping("/rate/{num}")
-    public ResponseEntity<ReviewRatingDTO> findByAccomReviewRate(@PathVariable int num){
-       ReviewRatingDTO dto = reviewRepostiory.rating(num); // accomNum
+    @GetMapping("/rate/{accomNum}")
+    public ResponseEntity<ReviewRatingDTO> findByAccomReviewRate(@PathVariable int accomNum){
+       ReviewRatingDTO dto = reviewRepostiory.rating(accomNum); // accomNum
         return new ResponseEntity<>(dto,HttpStatus.OK);
     }
 
    @PostMapping
-    public ResponseEntity<String> saveReview(@RequestBody Map<String,Object> review){
+    //public ResponseEntity<Review> saveReview(@RequestBody Review review){
+       public ResponseEntity<String> saveReview(@RequestBody Map<String,Object>review){
+       LocalDate date = LocalDate.now();
+       String now = String.valueOf(date);
 
-//       LocalDate date = LocalDate.now();
-//       String now = String.valueOf(date);
-//       review.setHiredate(now);
-//
-//       Review entity =  reviewRepostiory.save(review);
+       Accom accom = new Accom();
+       String accomNumStr = (String) review.get("accomNum");  // Map에서 가져온 값은 Object 타입이므로, String으로 캐스팅
+       int accomNum = Integer.parseInt(accomNumStr);
+       accom.setAccomNum(accomNum);
+
+       User user = new User();
+       user.setUsername((String) review.get("username"));
+
+       Review review1 = new Review();
+       review1.setAccom(accom);
+       review1.setUser(user);
+       review1.setSatisfy((Integer) review.get("satisfy"));
+       review1.setAccuracy((Integer) review.get("accuracy"));
+       review1.setClean((Integer) review.get("clean"));
+       review1.setScp((Integer) review.get("scp"));
+       review1.setRevContent((String) review.get("revContent"));
+       review1.setHiredate(now);
+
+       Review entity =  reviewRepostiory.save(review1);
+       System.out.println(review.get("accomNum"));
        return new ResponseEntity<>("성공",HttpStatus.OK);
     }
 

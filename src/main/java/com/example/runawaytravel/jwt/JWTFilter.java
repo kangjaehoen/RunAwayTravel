@@ -1,6 +1,6 @@
 package com.example.runawaytravel.jwt;
 
-import com.example.runawaytravel.DTO.CustomUserDetails;
+import com.example.runawaytravel.dto.CustomUserDetails;
 import com.example.runawaytravel.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

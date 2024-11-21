@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import java.util.Date;
 public class JWTUtil {
 
     private Key key;//객체 키 만들기
+
 
     public JWTUtil(@Value("${spring.jwt.secret}")String secret) { //변수 데이터 들고 오기 (변수 받기)
 
