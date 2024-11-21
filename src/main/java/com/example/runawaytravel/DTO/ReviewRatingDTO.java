@@ -1,4 +1,4 @@
-package com.example.runawaytravel.dto;
+package com.example.runawaytravel.dto2;
 
 import lombok.*;
 

@@ -1,6 +1,5 @@
 package com.example.runawaytravel;
 
-import com.example.runawaytravel.dto.ReviewRatingDTO;
 import com.example.runawaytravel.entity.Accom;
 import com.example.runawaytravel.entity.Review;
 import com.example.runawaytravel.entity.User;
@@ -11,10 +10,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
