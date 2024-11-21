@@ -34,7 +34,6 @@ public class PaymentController {
 
     //결제내역
     @GetMapping
-    @CrossOrigin(origins = "*")
     public ResponseEntity<?> payment(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
                                      @RequestParam(value = "size", required = false, defaultValue = "10") int size,
                                      @RequestParam(value = "status", required = false) Character status,
@@ -67,8 +66,9 @@ public class PaymentController {
 
 
     @PutMapping
-    @CrossOrigin(origins = "*")
     public ResponseEntity<?> insertPay(@RequestBody PaymentDTO payinfo){
+        String id= "sumin0901";
+
         Pay pay = new Pay();
 
         // impUid 설정
@@ -101,6 +101,7 @@ public class PaymentController {
         pay.setName(payinfo.getName());
         pay.setPayDate(LocalDate.now());
         pay.setPay_Status('Y');
+        pay.setUserUsername(id);
 
         payResp.save(pay);
 
@@ -129,6 +130,5 @@ public class PaymentController {
 
         return ResponseEntity.ok("결제 취소가 완료되었습니다.");
     }
-
 
 }

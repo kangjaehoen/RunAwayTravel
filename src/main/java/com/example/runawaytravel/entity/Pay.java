@@ -41,5 +41,11 @@ public class Pay {
     private String name;
     private String apply_num;
 
+    public void setUserUsername(String username) {
+        if(this.user == null) {
+            this.user = new User();
+        }
+        this.user.setUsername(username);
+    }
 }
 
