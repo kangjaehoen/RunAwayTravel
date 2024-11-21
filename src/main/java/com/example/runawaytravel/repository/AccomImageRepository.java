@@ -9,5 +9,7 @@ import java.util.List;
 
 public interface AccomImageRepository extends JpaRepository<AccomImage, Integer> {
     @Query("select t from AccomImage t join fetch t.accom a where a.accomNum = :accomNum")
-    public List<AccomImage>oneacc(int accomNum);
+    public List<AccomImage> oneacc(int accomNum);
+
+    AccomImage findTopByAccom_AccomNum(int accomNum);
 }
