@@ -1,4 +1,4 @@
-package com.example.runawaytravel.DTO;
+package com.example.runawaytravel.dto;
 
 import lombok.Getter;
 import lombok.Setter;

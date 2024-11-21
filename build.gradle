@@ -34,8 +34,17 @@ dependencies {
 //	implementation 'com.siot.IamportRestClient:iamport-rest-client:1.0.2'
 //	implementation 'com.kr.IamportRestClient:iamport-rest-client:1.0.2'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	testImplementation 'org.springframework.security:spring-security-test'
-	}
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+	implementation 'org.json:json:20230227'
+//	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+
+
 
 tasks.named('test') {
 	useJUnitPlatform()
