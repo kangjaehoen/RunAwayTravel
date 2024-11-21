@@ -40,8 +40,7 @@ public class MainController {
     }
     @GetMapping(value = "/getrandom")
     public ResponseEntity<Map<String,Object>>getrandomAccom(@RequestParam(defaultValue = "") int page){
-        Page<Accom>randomAcc = acr.randomAccom( PageRequest.of(page,6
-        ));
+        Page<Accom>randomAcc = acr.randomAccom( PageRequest.of(page,6));
         Map<String,Object>response=new HashMap<>();
         response.put("getContent",randomAcc.getContent());
         response.put("getTotalPages",randomAcc.getTotalPages());

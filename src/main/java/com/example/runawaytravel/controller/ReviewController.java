@@ -1,6 +1,6 @@
 package com.example.runawaytravel.controller;
 
-import com.example.runawaytravel.dto.ReviewRatingDTO;
+import com.example.runawaytravel.dto2.ReviewRatingDTO;
 import com.example.runawaytravel.entity.Accom;
 import com.example.runawaytravel.entity.Review;
 import com.example.runawaytravel.entity.User;
@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -59,10 +60,16 @@ public class ReviewController {
     }
 
    @PostMapping
-    //public ResponseEntity<Review> saveReview(@RequestBody Review review){
-       public ResponseEntity<String> saveReview(@RequestBody Map<String,Object>review){
+       public ResponseEntity<String> saveReview(@RequestBody Map<String,Object>review, Principal principal){
        LocalDate date = LocalDate.now();
        String now = String.valueOf(date);
+
+       System.out.println(principal);
+       if (principal == null && principal.getName() == null && principal.getName().trim().isEmpty()) {
+           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+       }
+       String userName = principal.getName();
+       System.out.println(userName);
 
        Accom accom = new Accom();
        String accomNumStr = (String) review.get("accomNum");  // Map에서 가져온 값은 Object 타입이므로, String으로 캐스팅
@@ -70,7 +77,7 @@ public class ReviewController {
        accom.setAccomNum(accomNum);
 
        User user = new User();
-       user.setUsername((String) review.get("username"));
+       user.setUsername(userName);
 
        Review review1 = new Review();
        review1.setAccom(accom);
@@ -88,7 +95,7 @@ public class ReviewController {
     }
 
 
-    @PutMapping
+  /*  @PutMapping
     public ResponseEntity<Review> saveUpdateReview(@RequestBody Review review){
         LocalDate date = LocalDate.now();
         String now =  String.valueOf(date);
@@ -106,7 +113,7 @@ public class ReviewController {
         map.put("list", entitys);
 
         return new ResponseEntity<>(map, HttpStatus.OK);
-    }
+    }*/
 
    @GetMapping("/{num}/{search}")
     public ResponseEntity<HashMap> searchReview(@PathVariable int num,
