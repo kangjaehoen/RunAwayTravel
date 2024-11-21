@@ -1,27 +1,35 @@
 package com.example.runawaytravel.controller;
 
+import com.example.runawaytravel.DTO.CustomUserDetails;
 import com.example.runawaytravel.DTO.PageDTO;
 import com.example.runawaytravel.entity.Accom;
 import com.example.runawaytravel.entity.Dayoff;
+import com.example.runawaytravel.entity.User;
+import com.example.runawaytravel.jwt.JWTUtil;
 import com.example.runawaytravel.repository.AccomImageRepository;
 import com.example.runawaytravel.repository.AccomRepository;
 import com.example.runawaytravel.repository.DayoffRepository;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins="http://localhost:5173", allowedHeaders = "*", exposedHeaders="Authorization", allowCredentials = "true")
 public class AccMenuController {
     @Autowired
     AccomRepository acr;
@@ -30,26 +38,33 @@ public class AccMenuController {
     @Autowired
     DayoffRepository dor;
 
+
     @PostMapping("/myaccomtable")
-    public ResponseEntity<Map<String, Object>> myaccomtable(@RequestBody PageDTO page, HttpSession session) {
-        String username= (String) session.getAttribute("username");
-        if(username == null){username = "testID";}//로그인 실패시
+    public ResponseEntity<Map<String, Object>> myaccomtable(@RequestBody PageDTO page, Principal principal) {
+        if (principal == null || principal.getName() == null || principal.getName().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-        System.out.println("현재 아이디 : "+username);
+        String username = principal.getName();
+        System.out.println("Logged in user: " + username);
 
-        PageRequest pr = PageRequest.of(page.getPage(),10);
-        Page<Accom> mylist =acr.searchmine(username, page.getKey(),pr);
+        try {
+            PageRequest pr = PageRequest.of(page.getPage(), 10);
+            Page<Accom> mylist = acr.searchmine(username, page.getKey(), pr);
+            Map<String, Object> response = new HashMap<>();
+            response.put("content", mylist.getContent()); // Accom 리스트
+            response.put("currentPage", mylist.getNumber());
+            response.put("totalPages", mylist.getTotalPages());
+            response.put("totalElements", mylist.getTotalElements());
 
-        // 필요한 데이터를 Map 형태로 변환
-        Map<String, Object> response = new HashMap<>();
-        response.put("content", mylist.getContent()); // Accom 리스트
-        response.put("currentPage", mylist.getNumber());
-        response.put("totalPages", mylist.getTotalPages());
-        response.put("totalElements", mylist.getTotalElements());
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
+
     @PostMapping(value = "/changeonsale")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<String>changeonsale(@RequestBody List<Integer>accomNumList){
         List<Accom>list= acr.manyacc(accomNumList);
         for(Accom accom : list){

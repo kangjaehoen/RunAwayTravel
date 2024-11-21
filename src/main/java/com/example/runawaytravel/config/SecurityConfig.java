@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.Collections;
 
 @Configuration
@@ -58,6 +57,7 @@ public class SecurityConfig {
                                 config.setMaxAge(3600L);
                                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                                 source.registerCorsConfiguration("/api**", config);
+                                config.addExposedHeader("Authorization");
                                 return config;
                             }
                         })));
