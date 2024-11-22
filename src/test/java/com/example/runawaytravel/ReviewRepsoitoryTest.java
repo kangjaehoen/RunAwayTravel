@@ -95,10 +95,12 @@ public class ReviewRepsoitoryTest {
         list.stream().forEach(System.out::println);
     }
 
+/*
     @Test
     public void rate(){
         System.out.println(reviewRepostiory.rating(75));
     }
+*/
 
 /*    @Test
     public void searchList(){

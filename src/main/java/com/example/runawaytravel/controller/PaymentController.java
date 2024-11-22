@@ -1,22 +1,27 @@
 package com.example.runawaytravel.controller;
 
-import com.example.runawaytravel.entity.Accom;
+import com.example.runawaytravel.dto.PaymentDTO;
 import com.example.runawaytravel.entity.Pay;
 import com.example.runawaytravel.entity.Reservation;
+import com.example.runawaytravel.entity.User;
 import com.example.runawaytravel.repository.PayRepository;
 import com.example.runawaytravel.repository.ReservationRepository;
+import com.example.runawaytravel.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 
 @RestController
-@RequestMapping("/payment")
-@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/api/payment")
+@CrossOrigin(origins = "*")
 public class PaymentController {
     @Autowired
     PayRepository payResp;
@@ -24,73 +29,106 @@ public class PaymentController {
     @Autowired
     ReservationRepository resResp;
 
-/*
+    @Autowired
+    UserRepository userResp;
+
+    //결제내역
     @GetMapping
-    public ResponseEntity<String> payment() {
+    public ResponseEntity<?> payment(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                     @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+                                     @RequestParam(value = "status", required = false) Character status,
+                                     @RequestParam(value = "year", required = false) Integer year,
+                                     @RequestParam(value = "month", required = false) Integer month ) {
 
-        if(id == null){
-            redirectAttributes.addFlashAttribute("errorMessage", "로그인 한 회원만 접근가능한 페이지 입니다.");
+        String id= "sumin0901";
+
+
+        Optional<User> userOpt= userResp.findById(id);
+
+        if(userOpt.isEmpty()){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("로그인 한 회원만 접근가능 한 페이지 입니다.");
         }
-        List<Pay> list = dao.payList(id);
 
-        return "payment";
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Pay> paginatedList = payResp.findAllPayments(id, status, year, month, pageRequest);
+
+        User user = userOpt.get();
+        Page<Pay> list = payResp.findAllPayments(id, status, year, month, pageRequest);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", paginatedList.getContent()); // 데이터 리스트
+        response.put("totalPages", paginatedList.getTotalPages()); // 전체 페이지 수
+        response.put("currentPage", paginatedList.getNumber()); // 현재 페이지 번호
+        response.put("totalElements", paginatedList.getTotalElements()); // 전체 요소 개수
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-*/
 
 
     @PutMapping
-    public ResponseEntity<?> insertPay(@RequestBody Pay pay){
-        
-        //결제번호: 자동생성이 아니라서 persist() 필요
-        String impuid= "imp_497727200392";
-        pay.setImpUid(impuid);
+    public ResponseEntity<?> insertPay(@RequestBody PaymentDTO payinfo){
+        String id= "sumin0901";
 
-        //예약번호 가져오기
-        Reservation res= pay.getResNum();
+        Pay pay = new Pay();
 
-        if(res== null){
+        // impUid 설정
+        pay.setImpUid(payinfo.getImpUid());
+
+        // apply_num 필드는 선택적으로 처리
+        if (payinfo.getApply_num() != null) {
+            pay.setApply_num(payinfo.getApply_num());
+        }
+
+        // 예약번호 가져오기
+        Integer resnum = payinfo.getResNum();
+        if (resnum == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("예약번호가 필요합니다.");
+        }
+
+        Optional<Reservation> resOpt = resResp.findById(resnum);
+        if (resOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 예약번호에 대한 정보가 없습니다.");
         }
 
-        //예약과 숙소정보 가져오기
-        Integer resNum= res.getResNum();
-        Accom accom= res.getAccom();
+        Reservation reservation = resOpt.get();
+        pay.setResNum(reservation);
+        pay.setAccomNum(reservation.getAccom());
 
-        if(resNum==null | accom==null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("예약정보 또는 숙소정보가 존재하지 않습니다.");
-        }
+        // 추가적으로 필요한 필드 설정
+        pay.setPay_Status(payinfo.getPay_status());
+        pay.setMerchantUid(payinfo.getMerchantUid());
+        pay.setAmount(payinfo.getAmount());
+        pay.setName(payinfo.getName());
+        pay.setPayDate(LocalDate.now());
+        pay.setPay_Status('Y');
+        pay.setUserUsername(id);
 
-        Optional<Reservation> resOpt= resResp.findById(resNum);
+        payResp.save(pay);
 
-        if(resOpt.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 예약번호에 대한 정보가 없습니다.");
-        }
-
-        pay.setResNum(resOpt.get());
-        pay.setAccomNum(accom);
-
-        Pay payment= payResp.save(pay);
-
-        return ResponseEntity.ok(payment);
+        return ResponseEntity.ok(pay);
     }
-
 
     //결제취소
-    @PutMapping("/cancel")
+    @PostMapping("/cancel")
     @Transactional
-    public ResponseEntity<String> cancelPayment(@RequestBody Pay pay) {
+    public ResponseEntity<String> cancelPayment(@RequestBody List<String> impUids) {
 
-        String impUid = pay.getImpUid();
 
-        // 각 impUid에 대해 결제 취소 처리 (DB에서 결제 상태 변경 또는 삭제)
-        int updateStatus= payResp.cancelPay(impUid);
+        if (impUids == null || impUids.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("취소할 결제를 선택하세요.");
+        }
 
-         if(updateStatus > 0){
-            return ResponseEntity.ok("결제취소가 완료되었습니다.");
-         }else{
-             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("결제정보가 없습니다:"+impUid);
-         }
+        for (String impUid : impUids) {
+            int updateStatus = payResp.cancelPay(impUid);
+
+            if (updateStatus > 0) {
+                return ResponseEntity.ok("결제취소가 완료되었습니다.");
+             }else{
+                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("결제정보가 없습니다:"+impUid);
+             }
+        }
+
+        return ResponseEntity.ok("결제 취소가 완료되었습니다.");
     }
-
 
 }
