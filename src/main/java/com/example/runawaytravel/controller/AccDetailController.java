@@ -27,7 +27,7 @@ public class AccDetailController {
     public ResponseEntity<Map<String,Object>> accDetail(@PathVariable("accomnum") int accomnum) {
 
         Optional<Accom> accom= accomRep.findById(accomnum);
-
+        System.out.println("dd");
         long revCnt=resRep.countReview(accomnum);
         String revRate=resRep.reviewRating(accomnum);
 
