@@ -14,12 +14,12 @@ import java.time.LocalDate;
 public class Pay {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="username")
-    private User username;
+    private User user;
 
     @Column(name = "paydate")
     private LocalDate payDate;
 
-    @Column(name="pay_Status")
+    @Column(name="pay_status")
     private Character pay_Status;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,5 +41,11 @@ public class Pay {
     private String name;
     private String apply_num;
 
+    public void setUserUsername(String username) {
+        if(this.user == null) {
+            this.user = new User();
+        }
+        this.user.setUsername(username);
+    }
 }
 

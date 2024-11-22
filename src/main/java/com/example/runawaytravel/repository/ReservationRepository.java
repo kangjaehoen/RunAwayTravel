@@ -15,13 +15,13 @@ public interface ReservationRepository extends JpaRepository<Reservation,Integer
             " join fetch r.accom a" +
             " join fetch r.user u1" +
             " join fetch a.user u2" +
-            " where u2.username = :username and r. chkin_Date <= :end and chkout_Date >= :start")
+            " where u2.username = :username and r.chkin_Date <= :end and r.chkout_Date >= :start")
     public List<Reservation> resMonth(String username, LocalDate start, LocalDate end);
     @Query("select distinct r from Reservation r" +
             " join fetch r.accom a" +
             " join fetch r.user u1" +
             " join fetch a.user u2" +
-            " where a.accomNum = :accomNum and r. chkin_Date <= :end and chkout_Date >= :start")
+            " where a.accomNum = :accomNum and r.chkin_Date <= :end and r.chkout_Date >= :start")
     public List<Reservation> resMonthbyAccomNum(int accomNum, LocalDate start, LocalDate end);
 
     //숙소정보

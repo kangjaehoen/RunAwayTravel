@@ -37,4 +37,5 @@ public class Reservation {
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="accomnum")
     private Accom accom;
+
 }
