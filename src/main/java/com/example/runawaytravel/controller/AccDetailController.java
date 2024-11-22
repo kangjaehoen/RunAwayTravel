@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/accDetail")
-@CrossOrigin(origins = "*")
 public class AccDetailController {
     @Autowired
     AccomRepository accomRep;
