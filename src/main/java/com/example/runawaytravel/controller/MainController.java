@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins="*", allowedHeaders = "*")
+//@CrossOrigin(origins="*", allowedHeaders = "*")
 public class MainController {
     @Autowired
     AccomRepository acr;
