@@ -15,12 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin("*")
+//@CrossOrigin("*")
 public class AccRegController {
     @Autowired
     AccomRepository acr;
@@ -30,12 +31,14 @@ public class AccRegController {
     DayoffRepository dor;
 
     @PostMapping("/accUpload")
-    public ResponseEntity<String> regAcc(HttpSession session, @ModelAttribute Accom accom, @RequestParam(required = false) List<MultipartFile> imageUpload, @ModelAttribute AccomImage ai, @RequestParam(value = "dayoff", required = false) LinkedList<Integer> days) {
+    public ResponseEntity<String> regAcc(@ModelAttribute Accom accom, @RequestParam(required = false) List<MultipartFile> imageUpload, @ModelAttribute AccomImage ai, @RequestParam(value = "dayoff", required = false) LinkedList<Integer> days, Principal principal) {
         //session에서 username가지고 오기
-        String username = (String) session.getAttribute("username");
-        if (username == null) {
-            username = "testID";
+        if (principal == null || principal.getName() == null || principal.getName().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        String username = principal.getName();
+        System.out.println("Logged in user: " + username);
         //저장할 accom 세팅
         accom = setting(accom,username,days);
         //테이블에 저장

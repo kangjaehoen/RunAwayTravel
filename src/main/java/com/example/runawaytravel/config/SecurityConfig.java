@@ -69,7 +69,7 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable()); //stateless 상태일때 필요없기에 disable 시키기
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login/**", "/", "/api/join/**","/error").permitAll()
+                        .requestMatchers("/login/**", "/", "/api/join/**","/error","/getrandom").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
         http
