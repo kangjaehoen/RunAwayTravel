@@ -15,13 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
 
 
 @RestController
 @RequestMapping("/api/payment")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class PaymentController {
     @Autowired
     PayRepository payResp;
@@ -38,22 +39,27 @@ public class PaymentController {
                                      @RequestParam(value = "size", required = false, defaultValue = "10") int size,
                                      @RequestParam(value = "status", required = false) Character status,
                                      @RequestParam(value = "year", required = false) Integer year,
-                                     @RequestParam(value = "month", required = false) Integer month ) {
+                                     @RequestParam(value = "month", required = false) Integer month, Principal principal ) {
 
-        String id= "sumin0901";
+        if (principal == null || principal.getName() == null || principal.getName().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String username = principal.getName();
+        System.out.println("Logged in user: " + username);
 
 
-        Optional<User> userOpt= userResp.findById(id);
+        Optional<User> userOpt= userResp.findById(username);
 
         if(userOpt.isEmpty()){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("로그인 한 회원만 접근가능 한 페이지 입니다.");
         }
 
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Pay> paginatedList = payResp.findAllPayments(id, status, year, month, pageRequest);
+        Page<Pay> paginatedList = payResp.findAllPayments(username, status, year, month, pageRequest);
 
         User user = userOpt.get();
-        Page<Pay> list = payResp.findAllPayments(id, status, year, month, pageRequest);
+        Page<Pay> list = payResp.findAllPayments(username, status, year, month, pageRequest);
 
         Map<String, Object> response = new HashMap<>();
         response.put("content", paginatedList.getContent()); // 데이터 리스트
@@ -66,8 +72,13 @@ public class PaymentController {
 
 
     @PutMapping
-    public ResponseEntity<?> insertPay(@RequestBody PaymentDTO payinfo){
-        String id= "sumin0901";
+    public ResponseEntity<?> insertPay(@RequestBody PaymentDTO payinfo, Principal principal){
+        if (principal == null || principal.getName() == null || principal.getName().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String username = principal.getName();
+        System.out.println("Logged in user: " + username);
 
         Pay pay = new Pay();
 
@@ -101,7 +112,7 @@ public class PaymentController {
         pay.setName(payinfo.getName());
         pay.setPayDate(LocalDate.now());
         pay.setPay_Status('Y');
-        pay.setUserUsername(id);
+        pay.setUserUsername(username);
 
         payResp.save(pay);
 
