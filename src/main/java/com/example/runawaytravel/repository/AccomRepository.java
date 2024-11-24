@@ -54,7 +54,4 @@ public interface AccomRepository extends JpaRepository<Accom, Integer> {
     //리뷰 별점
     @Query("select round(avg(r.satisfy),1) from Review r inner join r.accom a where a.accomNum= :accomnum")
     public  String reviewRating(@Param("accomnum") int accomnum);
-
-
-
 }

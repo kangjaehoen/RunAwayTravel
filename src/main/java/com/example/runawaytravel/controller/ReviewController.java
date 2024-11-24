@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/review")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class ReviewController {
     @Autowired
