@@ -37,7 +37,6 @@ public class JWTFilter extends OncePerRequestFilter {
         if (jwtUtil.isExpired(token)) { //토큰이 존재하는데 소멸시간이 지났는지 보기 위해 if true 토큰이 만료되어 종료 하고 필터체인으로 다음 필터한테 받은 response, request를 넘겨준다
             System.out.println("token expired");
             filterChain.doFilter(req, res);
-
             return;
         }
         //그 토큰을 기반으로 일시적인 세션을 만들어서 security context holder <- 시큐리티 세션에다 우리의 유저를 일시적으로 저장시킨다

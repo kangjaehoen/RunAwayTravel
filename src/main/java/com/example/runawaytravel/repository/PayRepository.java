@@ -27,14 +27,16 @@ public interface PayRepository extends JpaRepository<Pay, String> {
             " join fetch r.user u3" +
             " join fetch r.accom a2" +
             " join fetch a2.user u4" +
-            " WHERE u.username = :username")
+            " WHERE u.username = :username" +
+            " ORDER BY r.resNum desc")
     Page<Pay>paylist(String username, Pageable pageable);
 
 //  결제내역 조건부 조회
     @Query("SELECT p FROM Pay p WHERE p.user.username = :username"
             + " AND (:status IS NULL OR p.pay_Status = :status)"
             + " AND (:year IS NULL OR YEAR(p.payDate) = :year)"
-            + " AND (:month IS NULL OR MONTH(p.payDate) = :month)")
+            + " AND (:month IS NULL OR MONTH(p.payDate) = :month)" +
+            " ORDER BY p.resNum.resNum desc")
     Page<Pay> findAllPayments(@Param("username") String username,
                       @Param("status") Character status,
                       @Param("year") Integer year,

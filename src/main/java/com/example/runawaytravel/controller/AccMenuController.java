@@ -31,6 +31,7 @@ public class AccMenuController {
 
     @PostMapping("/myaccomtable")
     public ResponseEntity<Map<String, Object>> myaccomtable(@RequestBody PageDTO page, Principal principal) {
+        System.out.println(principal.getName());
         if (principal == null || principal.getName() == null || principal.getName().trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
