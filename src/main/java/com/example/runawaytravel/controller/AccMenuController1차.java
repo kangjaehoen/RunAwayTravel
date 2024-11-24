@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Controller
-@CrossOrigin(origins = "*")
 public class AccMenuController1차 {
     @Autowired
     AccomRepository acr;

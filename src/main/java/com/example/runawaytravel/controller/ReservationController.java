@@ -18,8 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
-@RequestMapping("/reservation")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/reservation")
 public class ReservationController {
     @Autowired
     ReservationRepository resRep;

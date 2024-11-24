@@ -21,7 +21,6 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/payment")
-@CrossOrigin(origins = "*")
 public class PaymentController {
     @Autowired
     PayRepository payResp;

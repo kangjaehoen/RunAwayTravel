@@ -15,25 +15,22 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/wish")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/wish")
 public class WishListController {
     @Autowired
     private WishListRepository wishListRepository;
 
-    @GetMapping
-    public ResponseEntity<List<WishList>> findByUserName(Principal principal){
+    @GetMapping("/{userName}")
+    public ResponseEntity<List<WishList>> findByUserName(@PathVariable String userName, Principal principal){
         System.out.println(principal);
+        System.out.println(userName);
         if (principal == null && principal.getName() == null && principal.getName().trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        String userName = principal.getName();
-        System.out.println(userName);
+        String username = principal.getName();
+
         User user = new User();
         user.setUsername(userName);
-
-//        //임시 아이디 설정
-//        userName.setUsername("testID");
 
         System.out.println("axios 요청 들어옴.");
         List<WishList> list =  wishListRepository.findByUserName(user);
@@ -43,24 +40,21 @@ public class WishListController {
     @PostMapping
     @Transactional
     public ResponseEntity<String> saveWishList(@RequestBody Map<String,Object> wishList, Principal principal){
-        System.out.println(wishList);
-        System.out.println(principal);
-        if (principal == null && principal.getName() == null && principal.getName().trim().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        System.out.println("wishList 객체 : "+wishList);
+        System.out.println("principal 시큐리티 토큰값 : "+principal);
 
-        String userName = principal.getName();
-        System.out.println(userName);
-
+        //String username = principal.getName();
 
         WishList wishList1  = new WishList();
 
         User user = new User();
-        user.setUsername(userName);
+        user.setUsername((String) wishList.get("userName"));
+
         wishList1.setUserName(user);
 
         Accom accom = new Accom();
         accom.setAccomNum((Integer) wishList.get("accomNum"));;
+
         wishList1.setAccomNum(accom);
 
         String checkStatusString = (String) wishList.get("checkStatus");  // checkStatus가 String일 경우
@@ -86,23 +80,26 @@ public class WishListController {
        return new ResponseEntity<>(check,HttpStatus.OK);
     }*/
 
-    @DeleteMapping
+    @DeleteMapping("/{userName}/{accomNum}")
     @Transactional
-    public ResponseEntity<String> deleteByUserNameAndAccomNum(@RequestBody Map<String,Object> wishList, Principal principal){
-
-        System.out.println(principal);
-        if (principal == null && principal.getName() == null && principal.getName().trim().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        String userName = principal.getName();
+    public ResponseEntity<String> deleteByUserNameAndAccomNum(@PathVariable String userName,
+                                                                @PathVariable int accomNum,
+                                                                Principal principal){
         System.out.println(userName);
+        System.out.println(accomNum);
+//        System.out.println(principal);
+//        if (principal == null && principal.getName() == null && principal.getName().trim().isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//
+//        String userName = principal.getName();
+//        System.out.println(userName);
 
         User user = new User();
         user.setUsername(userName);
 
         Accom accom = new Accom();
-        accom.setAccomNum((Integer) wishList.get("accomNum"));
+        accom.setAccomNum(accomNum);
 
         wishListRepository.deleteByUserNameAndAccomNum(user, accom);
         return new ResponseEntity<>("위시리스트 삭제성공", HttpStatus.OK);

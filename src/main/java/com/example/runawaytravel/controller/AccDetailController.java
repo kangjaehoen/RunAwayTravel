@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/accDetail")
+@RequestMapping("/api/accDetail")
 public class AccDetailController {
     @Autowired
     AccomRepository accomRep;
@@ -33,7 +33,7 @@ public class AccDetailController {
 
         Map<String,Object> response=new HashMap<>();
         response.put("accom",accom.orElse(null));
-        response.put("revCnt", revCnt);
+        response.put("revCnt", revCnt );
         response.put("revRate", revRate );
         response.put("reservation", reservation);
 
