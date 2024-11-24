@@ -18,6 +18,7 @@ import java.util.Map;
 
 @RestController
 //@CrossOrigin(origins="*", allowedHeaders = "*")
+@RequestMapping(value = "/api")
 public class MainController {
     @Autowired
     AccomRepository acr;

@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/wish")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/wish")
 public class WishListController {
     @Autowired
     private WishListRepository wishListRepository;
