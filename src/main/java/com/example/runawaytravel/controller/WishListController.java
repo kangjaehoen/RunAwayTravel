@@ -21,13 +21,9 @@ public class WishListController {
     private WishListRepository wishListRepository;
 
     @GetMapping("/{userName}")
-    public ResponseEntity<List<WishList>> findByUserName(@PathVariable String userName, Principal principal){
-        System.out.println(principal);
+    public ResponseEntity<List<WishList>> findByUserName(@PathVariable String userName){
+
         System.out.println(userName);
-        if (principal == null && principal.getName() == null && principal.getName().trim().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        String username = principal.getName();
 
         User user = new User();
         user.setUsername(userName);
