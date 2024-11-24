@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/review")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/review")
 public class ReviewController {
     @Autowired
     private ReviewRepostiory reviewRepostiory;
@@ -59,17 +58,20 @@ public class ReviewController {
         return new ResponseEntity<>(dto,HttpStatus.OK);
     }
 
-   @PostMapping
-       public ResponseEntity<String> saveReview(@RequestBody Map<String,Object>review, Principal principal){
+    @PostMapping
+       public ResponseEntity<String> saveReview(@RequestBody Map<String,Object>review){
+
+       System.out.println(review);
+
+//       if (principal == null && principal.getName() == null && principal.getName().trim().isEmpty()) {
+//           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//       }
+//       String userName = principal.getName();
+//       System.out.println(userName);
+
+
        LocalDate date = LocalDate.now();
        String now = String.valueOf(date);
-
-       System.out.println(principal);
-       if (principal == null && principal.getName() == null && principal.getName().trim().isEmpty()) {
-           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-       }
-       String userName = principal.getName();
-       System.out.println(userName);
 
        Accom accom = new Accom();
        String accomNumStr = (String) review.get("accomNum");  // Map에서 가져온 값은 Object 타입이므로, String으로 캐스팅
@@ -77,7 +79,7 @@ public class ReviewController {
        accom.setAccomNum(accomNum);
 
        User user = new User();
-       user.setUsername(userName);
+       user.setUsername((String) review.get("userName"));
 
        Review review1 = new Review();
        review1.setAccom(accom);

@@ -26,7 +26,6 @@ public class AccDetailController {
     public ResponseEntity<Map<String,Object>> accDetail(@PathVariable("accomnum") int accomnum) {
 
         Optional<Accom> accom= accomRep.findById(accomnum);
-
         long revCnt=resRep.countReview(accomnum);
         String revRate=resRep.reviewRating(accomnum);
 
@@ -34,7 +33,7 @@ public class AccDetailController {
 
         Map<String,Object> response=new HashMap<>();
         response.put("accom",accom.orElse(null));
-        response.put("revCnt", revCnt);
+        response.put("revCnt", revCnt );
         response.put("revRate", revRate );
         response.put("reservation", reservation);
 
