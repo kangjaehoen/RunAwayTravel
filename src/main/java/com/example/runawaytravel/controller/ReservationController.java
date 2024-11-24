@@ -18,8 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
-@RequestMapping("/reservation")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/reservation")
 public class ReservationController {
     @Autowired
     ReservationRepository resRep;
@@ -101,8 +100,13 @@ public class ReservationController {
 
     @PutMapping("/insertRes")
     @Transactional
-    public ResponseEntity<?> insertRes(@RequestBody Map<String,Object> reservinfo) {
+    public ResponseEntity<?> insertRes(@RequestBody Map<String,Object> reservinfo, Principal principal) {
+        if (principal == null || principal.getName() == null || principal.getName().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
+        String username = principal.getName();
+        System.out.println("Logged in user: " + username);
         Reservation reservation= new Reservation();
 
         int accomNum = Integer.valueOf(reservinfo.get("accomNum").toString());

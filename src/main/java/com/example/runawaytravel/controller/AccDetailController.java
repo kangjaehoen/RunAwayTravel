@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/accDetail")
+@RequestMapping("/api/accDetail")
 public class AccDetailController {
     @Autowired
     AccomRepository accomRep;
