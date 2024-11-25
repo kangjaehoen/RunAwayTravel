@@ -57,25 +57,6 @@ public class ReservationController {
 
 
     //예약하기 버튼-> 예약페이지(뷰에서 처리가능(?))
-//    @PostMapping
-//    public ResponseEntity<Reservation> reservBtn(@RequestBody Reservation reservation) {
-//
-//        Accom accom = reservation.getAccom();
-//        int accomnum= accom.getAccomNum();
-//        Accom accomInfo= accomRep.findById(accomnum).get();
-//
-//
-//        //체크인 시간 형식변환
-//        LocalTime chkinTime = accomInfo.getChkin_Time();
-//        DateTimeFormatter format= DateTimeFormatter.ofPattern("h:mm");
-//        String fmChkTime= chkinTime.format(format);
-//
-//        long revCnt=resRep.countReview(accomnum);
-//        String revRate=resRep.reviewRating(accomnum);
-//
-//        return new ResponseEntity<>(reservation, HttpStatus.OK);
-//    }
-
     @PostMapping
     public ResponseEntity<Map<String, Object>> reservBtn(@RequestBody Reservation reservation) {
 
