@@ -42,13 +42,14 @@ public class ReservationController {
         Integer price=resRep.accomPrice(accomnum);
 
         List<Reservation> reservation= resRep.findByAccomnum(accomnum);
-
+        List<AccomImage> images = ai.oneacc(accomnum);
         Map<String, Object> response= new HashMap<>();
         response.put("accom", accom);
         response.put("revCnt", revCnt);
         response.put("revRate", revRate );
         response.put("price", price);
         response.put("reservation", reservation);
+        response.put("images", images);
 
         ResponseEntity entity=new ResponseEntity<>(response, HttpStatus.OK);
 

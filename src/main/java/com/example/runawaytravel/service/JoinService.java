@@ -15,7 +15,6 @@ public class JoinService {
     public JoinService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-
     }
     public void joinProcess(JoinDTO joinDTO) {
         System.out.println(joinDTO);

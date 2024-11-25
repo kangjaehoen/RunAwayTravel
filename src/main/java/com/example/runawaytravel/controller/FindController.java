@@ -4,6 +4,8 @@ import com.example.runawaytravel.entity.User;
 import com.example.runawaytravel.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.security.SecureRandom;
@@ -15,11 +17,14 @@ import java.util.Map;
 public class FindController {
 
     private final UserRepository userRepository;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int PASSWORD_LENGTH = 12;
 
-    public FindController(UserRepository userRepository) {
+    public FindController(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @PostMapping("/UsernameFind")
@@ -55,7 +60,11 @@ public class FindController {
         if (user != null) {
             String temporaryPassword = generateTemporaryPassword();
 
-            user.setPassword(temporaryPassword);
+            System.out.println("Temporary Password (Before Encoding): " + temporaryPassword);
+            String encodedPassword = bCryptPasswordEncoder.encode(temporaryPassword);
+
+            user.setPassword(encodedPassword);
+
             userRepository.save(user);
 
             response.put("temporaryPassword", temporaryPassword);
