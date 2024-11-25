@@ -36,7 +36,6 @@ public class AccRegController {
         if (principal == null || principal.getName() == null || principal.getName().trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         String username = principal.getName();
         System.out.println("Logged in user: " + username);
         //저장할 accom 세팅

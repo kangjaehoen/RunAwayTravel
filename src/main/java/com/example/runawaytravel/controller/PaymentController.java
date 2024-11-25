@@ -44,7 +44,6 @@ public class PaymentController {
         if (principal == null || principal.getName() == null || principal.getName().trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         String username = principal.getName();
         System.out.println("Logged in user: " + username);
 
@@ -57,9 +56,6 @@ public class PaymentController {
 
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Pay> paginatedList = payResp.findAllPayments(username, status, year, month, pageRequest);
-
-        User user = userOpt.get();
-        Page<Pay> list = payResp.findAllPayments(username, status, year, month, pageRequest);
 
         Map<String, Object> response = new HashMap<>();
         response.put("content", paginatedList.getContent()); // 데이터 리스트
